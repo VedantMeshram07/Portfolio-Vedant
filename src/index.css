@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brutalist palette */
+    --color-cement: #d4d3d0;   /* Warm cement-grey */
+    --color-obsidian: #0a0a0a; /* Deep absolute black */
+    --color-electric: #ff4d00; /* Sharp orange */
+    --color-electric-blue: #3b82f6; /* Electric blue — precise, digital, infrastructural */
+
+    /* Type system */
+    --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+    --font-sans: 'Anton', 'Inter', 'Helvetica Neue', sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-cement);
+    color: var(--color-obsidian);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    cursor: none; /* Hide default cursor — Cursor.jsx provides the custom one */
+  }
+
+  #root,
+  main {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Keep the custom cursor in charge over every interactive element too.
+     Tailwind's `cursor-pointer` is overridden by this selector. */
+  a,
+  button,
+  [data-cursor='hover'] {
+    cursor: none;
+  }
+
+  /* Hide default scrollbars (Lenis handles smooth scrolling) */
+  html,
+  body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none; /* Chrome / Safari / Edge */
+  }
+
+  /* Lenis recommended base styles */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .font-serif-brutal {
+    font-family: var(--font-serif);
+  }
+  .font-sans-brutal {
+    font-family: var(--font-sans);
+  }
+}
