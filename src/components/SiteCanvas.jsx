@@ -5,6 +5,7 @@ import Magnetic from './Magnetic.jsx';
 import BrutalistSlice from './BrutalistSlice.jsx';
 import RightColumn from './RightColumn.jsx';
 import Powers from './Powers.jsx';
+import PowersTransition from './PowersTransition.jsx';
 import Artifacts from './Artifacts.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -106,6 +107,7 @@ export default function SiteCanvas() {
   const stripRef        = useRef(null);  // 130vw horizontal strip
   const leftBlockRef    = useRef(null);  // 30vw left obsidian → compresses
   const heroContentRef  = useRef(null);
+  const heroRightBlockRef = useRef(null);
   const taglineRefs     = useRef([]);
   const manifestoRef    = useRef(null);
   const loreItemRefs    = useRef([]);
@@ -120,18 +122,19 @@ export default function SiteCanvas() {
   const questsRailWidthRef = useRef(null); // the 30vw→12vw rail container
   const transitionPhraseRef = useRef(null); // the 'ENTERING QUESTS' phrase that appears during compression
 
-  /* ── refs (Powers — Act IV overlay) ──────────────────────────────── */
-  const powersOverlayRef   = useRef(null); // the entire Powers frame
-  const powersDividersRef  = useRef([]);   // 3 thin dividing lines
-  const powersColumnsRef   = useRef([]);   // 4 cement columns (absolutely positioned)
-  const powersTitlesRef    = useRef([]);   // 4 column title wrapper containers (translates up/down)
-  const powersTitleEmergencesRef = useRef([]); // 4 column h2 titles (Anton baseline rise)
-  const powersTechRef      = useRef([]);   // 4 tech annotation stacks
-  const powersStatementRef = useRef([]);   // 4 capability statements
-  const powersHeadersRef   = useRef([]);   // 4 index + pole headers
-  const powersVisibleRef   = useRef(false); // gate cursor-proximity listener to phase H+
-  const [scrollActiveIndex, setScrollActiveIndex] = useState(-1);
-  const lastScrollActiveIndex = useRef(-1);
+  /* ── refs (PowersTransition — obsidian column cinematic) ────────────── */
+  const ptOverlayRef  = useRef(null); // plain-opacity container
+  const ptColumnsRef  = useRef([]);   // 4 obsidian columns that expand
+
+  /* ── refs (Powers — Act IV final state) ─────────────────────────── */
+  const powersOverlayRef   = useRef(null);
+  const powersDividersRef  = useRef([]);
+  const powersColumnsRef   = useRef([]);
+  const powersTitlesRef    = useRef([]);
+  const powersTechRef      = useRef([]);
+  const powersStatementRef = useRef([]);
+  const powersHeadersRef   = useRef([]);
+  const powersActiveRef    = useRef(false); // true while Powers is on-screen (enables hover)
 
   /* ── refs (Artifacts — Act V overlay) ─────────────────────────────── */
   const artifactsOverlayRef = useRef(null);
@@ -151,10 +154,10 @@ export default function SiteCanvas() {
   const lineRefs   = useRef([]);
   const periodRefs = useRef([]);
 
-  /* ── flags ───────────────────────────────────────────────────────────── */
+  /* ── flags ───────────────────────────────────────────────────── */
   const questsRevealedRef = useRef(false);
-  const railWheelActive      = useRef(false);
-  const powersPlayed         = useRef(false);
+  const railWheelActive   = useRef(false);
+    
 
   /* ════════════════════════════════════════════════════════════════════════
      HERO ENTRANCE (real-time, not scrubbed)
@@ -204,173 +207,45 @@ export default function SiteCanvas() {
       gsap.set(transitionPhraseRef.current, { autoAlpha: 0, y: 8 });
     }
 
-    /* Powers — initial states. */
-    if (powersOverlayRef.current) {
-      gsap.set(powersOverlayRef.current, { autoAlpha: 0 });
+    /* ── PowersTransition: use plain opacity so CSS compounds correctly.
+       No autoAlpha / visibility — children are hidden purely by parent opacity:0 */
+    if (ptOverlayRef.current) {
+      gsap.set(ptOverlayRef.current, { opacity: 0 });
     }
-    powersDividersRef.current.forEach((d, i) => {
-      if (!d) return;
-      gsap.set(d, { left: `${(i + 1) * 3}vw`, opacity: 0 });
-    });
-    powersHeadersRef.current.forEach((h) => {
-      if (!h) return;
-      gsap.set(h, { autoAlpha: 0, y: 10 });
-    });
-    powersTitlesRef.current.forEach((t) => {
-      if (!t) return;
-      gsap.set(t, { y: '0px' });
-    });
-    powersTitleEmergencesRef.current.forEach((t) => {
-      if (!t) return;
-      gsap.set(t, { y: '105%', opacity: 1 });
-    });
-    powersTechRef.current.forEach((t) => {
-      if (!t) return;
-      gsap.set(t, { autoAlpha: 0, y: 12 });
-    });
-    powersStatementRef.current.forEach((s) => {
-      if (!s) return;
-      gsap.set(s, { autoAlpha: 0, y: 6 });
-    });
-    powersColumnsRef.current.forEach((c, i) => {
-      if (!c) return;
-      gsap.set(c, {
-        left:            `${i * 3}vw`,
-        width:           '3vw',
-        backgroundColor: OBSID,
-        autoAlpha:       0,
-      });
+    ptColumnsRef.current.forEach((c, i) => {
+      if (c) gsap.set(c, { left: `${i * 3}vw`, width: '3vw', backgroundColor: OBSID });
     });
 
-    /* Artifacts — initial states. */
-    if (artifactsOverlayRef.current) {
-      gsap.set(artifactsOverlayRef.current, { autoAlpha: 0 });
-    }
-    if (artifactsHeaderRef.current) {
-      gsap.set(artifactsHeaderRef.current, { autoAlpha: 0, y: 6 });
-    }
-    artifactsRecordsRef.current.forEach((r) => {
-      if (!r) return;
-      gsap.set(r, { autoAlpha: 0, y: 10 });
+    /* ── Powers: hide overlay; explicitly set columns + dividers to their
+       equal 25% positions so no residual GSAP state can override CSS. */
+    if (powersOverlayRef.current) gsap.set(powersOverlayRef.current, { autoAlpha: 0 });
+    powersColumnsRef.current.forEach((c, i) => {
+      if (c) gsap.set(c, { left: `${i * 25}%`, width: '25%', opacity: 1 });
     });
-    if (artifactsArchiveActionRef.current) {
-      gsap.set(artifactsArchiveActionRef.current, { autoAlpha: 0, y: 6 });
-    }
+    powersDividersRef.current.forEach((d, i) => {
+      if (d) gsap.set(d, { left: `${(i + 1) * 25}%` });
+    });
+
+
+    /* Artifacts — initial states. */
+    if (artifactsOverlayRef.current) gsap.set(artifactsOverlayRef.current, { autoAlpha: 0 });
+    if (artifactsHeaderRef.current) gsap.set(artifactsHeaderRef.current, { autoAlpha: 0, y: 6 });
+    artifactsRecordsRef.current.forEach((r) => { if (r) gsap.set(r, { autoAlpha: 0, y: 10 }); });
+    if (artifactsArchiveActionRef.current) gsap.set(artifactsArchiveActionRef.current, { autoAlpha: 0, y: 6 });
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ paused: true });
       
-      /* ── POWERS AUTO-PLAY ANIMATION (Decoupled from Scrub) ────────── */
-      const powersTl = gsap.timeline({ paused: true });
-      const colFinalLefts = ['0%', '25%', '50%', '75%'];
-      const divFinalLefts = ['25%', '50%', '75%'];
-      const activeWidths = ['23.333%', '23.333%', '30%', '23.333%'];
-      const activeLefts = ['0%', '23.333%', '46.666%', '76.666%'];
-      const activeDivs = ['23.333%', '46.666%', '76.666%'];
-
-      powersColumnsRef.current.forEach((c, i) => {
-        if (!c) return;
-        powersTl.to(c, {
-          autoAlpha:       1,
-          left:            colFinalLefts[i],
-          width:           '25%',
-          backgroundColor: CEMENT,
-          duration:        0.6,
-          ease:             'power3.inOut',
-        }, 0);
-      });
-
-      powersDividersRef.current.forEach((d, i) => {
-        if (!d) return;
-        powersTl.to(d, {
-          left:     divFinalLefts[i],
-          opacity:  1,
-          duration: 0.6,
-          ease:     'power3.inOut',
-        }, 0);
-      });
-
-      if (questsCement) {
-        powersTl.to(questsCement, {
-          autoAlpha: 0,
-          duration:  0.2,
-          ease:      'power2.in',
-        }, 0.3);
-      }
-
-      powersTl.set(questsOverlayRef.current, { autoAlpha: 0 }, 0.6);
-
-      powersTitleEmergencesRef.current.forEach((t, i) => {
-        if (!t) return;
-        powersTl.to(t, {
-          y:         '0%',
-          duration:  0.4,
-          ease:      'power3.out',
-        }, 0.7 + i * 0.05);
-      });
-
-      powersHeadersRef.current.forEach((h, i) => {
-        if (!h) return;
-        powersTl.to(h, {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.4,
-          ease:      'power3.out',
-        }, 0.7 + i * 0.05);
-      });
-
-      powersColumnsRef.current.forEach((c, i) => {
-        if (!c) return;
-        powersTl.to(c, {
-          left:     activeLefts[i],
-          width:    activeWidths[i],
-          duration: 0.4,
-          ease:      'power2.out',
-        }, 1.2);
-      });
-
-      powersDividersRef.current.forEach((d, i) => {
-        if (!d) return;
-        powersTl.to(d, {
-          left:     activeDivs[i],
-          duration: 0.4,
-          ease:     'power2.out',
-        }, 1.2);
-      });
-
-      if (powersTitlesRef.current[2]) {
-        powersTl.to(powersTitlesRef.current[2], {
-          y:        '-12vh',
-          duration: 0.4,
-          ease:     'power2.out',
-        }, 1.2);
-      }
-
-      if (powersTechRef.current[2]) {
-        powersTl.to(powersTechRef.current[2], {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.3,
-          ease:     'power2.out',
-        }, 1.4);
-      }
-      if (powersStatementRef.current[2]) {
-        powersTl.to(powersStatementRef.current[2], {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.3,
-          ease:     'power2.out',
-        }, 1.4);
-      }
-
-      powersTl.call(() => { powersVisibleRef.current = true; }, [], 1.6);
       /* ───────────────────────────────────────────────────────────── */
 
       /* ── 1. STRIP SLIDE  (0.20 → 1.00) ───────────────────────────── */
       tl.to(strip, { xPercent: 0, ease: 'none', duration: 0.80 }, 0.20);
 
       /* ── 2. HERO FADE   (0.20 → 0.55) ───────────────────────────── */
-      tl.to(heroContent, { autoAlpha: 0, y: -44, ease: 'power2.in', duration: 0.35 }, 0.20);
+      const heroFadeTargets = [heroContent, heroRightBlockRef.current].filter(Boolean);
+      if (heroFadeTargets.length) {
+        tl.to(heroFadeTargets, { autoAlpha: 0, y: -44, ease: 'power2.in', duration: 0.35 }, 0.20);
+      }
 
       /* ── 3. MANIFESTO PANE  (0.50 → 0.72) ───────────────────────── */
       tl.to(manifestoPane, { autoAlpha: 1, y: 0, ease: 'power3.out', duration: 0.22 }, 0.50);
@@ -410,134 +285,98 @@ export default function SiteCanvas() {
       tl.to(questsCement, { autoAlpha: 1, duration: 0.14, ease: 'power2.out' }, 1.434);
       tl.to(questsRail,   { autoAlpha: 1, duration: 0.11, ease: 'power2.out' }, 1.474);
 
-      if (powersOverlayRef.current) {
-        tl.set(powersOverlayRef.current, { autoAlpha: 1 }, 1.610);
+      // ─────────────────────────────────────────────────────────────────────
+      // STEP 1 — At 1.87: Transition overlay SNAPS on. Entire Quests (including
+      //          its overlay wrapper) fades out so nothing bleeds through.
+      // ─────────────────────────────────────────────────────────────────────
+      if (ptOverlayRef.current) {
+        tl.to(ptOverlayRef.current, { opacity: 1, duration: 0.001 }, 1.87);
       }
-      tl.to([questsRail].filter(Boolean), { autoAlpha: 0, duration: 0.10, ease: 'power2.inOut' }, 1.610);
-      tl.to({}, { duration: 1.24 }, 1.76);
+      // Fade out the ENTIRE Quests section — overlay + rail + cement
+      tl.to([questsOverlay, questsRail, questsCement].filter(Boolean), { autoAlpha: 0, duration: 0.14 }, 1.87);
 
-      tl.call(() => { powersVisibleRef.current = false; }, [], 3.00);
-
-      const neutralLefts = ['0%', '25%', '50%', '75%'];
-      const neutralDivs  = ['25%', '50%', '75%'];
-      powersColumnsRef.current.forEach((c, i) => {
+      // STEP 2 — 1.87 → 1.99: 4 obsidian columns fan out left→right, shift to cement.
+      ptColumnsRef.current.forEach((c, i) => {
         if (!c) return;
-        tl.to(c, { left: neutralLefts[i], width: '25%', duration: 0.14, ease: 'power2.inOut' }, 3.00);
-      });
-      powersDividersRef.current.forEach((d, i) => {
-        if (!d) return;
-        tl.to(d, { left: neutralDivs[i], opacity: 0.08, duration: 0.14, ease: 'power2.inOut' }, 3.00);
-      });
-      powersTitlesRef.current.forEach((t) => {
-        if (!t) return;
-        tl.to(t, { y: '0vh', duration: 0.12, ease: 'power2.inOut' }, 3.00);
-      });
-      powersTechRef.current.forEach((t) => {
-        if (!t) return;
-        tl.to(t, { autoAlpha: 0, duration: 0.10, ease: 'power2.in' }, 3.00);
-      });
-      powersStatementRef.current.forEach((s) => {
-        if (!s) return;
-        tl.to(s, { autoAlpha: 0, duration: 0.10, ease: 'power2.in' }, 3.00);
-      });
-      powersTitleEmergencesRef.current.forEach((t) => {
-        if (!t) return;
-        tl.to(t, { opacity: 0.18, duration: 0.12, ease: 'power2.inOut' }, 3.08);
-      });
-      powersHeadersRef.current.forEach((h) => {
-        if (!h) return;
-        tl.to(h, { autoAlpha: 0, duration: 0.10, ease: 'power2.in' }, 3.08);
+        tl.to(c, {
+          left:            `${i * 25}%`,
+          width:           '25%',
+          backgroundColor: CEMENT,
+          duration:        0.16,
+          ease:            'power2.inOut',
+        }, 1.87 + i * 0.022); // cascade stagger
       });
 
-      tl.to({}, { duration: 0.10 }, 3.18);
-      if (artifactsOverlayRef.current) {
-        tl.to(artifactsOverlayRef.current, {
-          autoAlpha: 1,
-          duration:  0.10,
-          ease:      'power2.out',
-        }, 3.28);
+      // STEP 3 — At 2.10: Transition SNAPS off. Powers SNAPS on.
+      //          Seamless handoff — transition cement == Powers cement.
+      if (ptOverlayRef.current) {
+        tl.to(ptOverlayRef.current, { opacity: 0, duration: 0.001 }, 2.10);
       }
-
       if (powersOverlayRef.current) {
-        tl.to(powersOverlayRef.current, {
-          autoAlpha: 0,
-          duration:  0.14,
-          ease:      'power2.inOut',
-        }, 3.32);
+        tl.to(powersOverlayRef.current, { autoAlpha: 1, duration: 0.001 }, 2.10);
       }
 
-      /* ── L. Content Emergence  (3.42 → 3.58)  +144vh ─────────────
-             Editorial records appear — slow, established, verified.  */
+      tl.to({}, { duration: 0.10 }, 2.20);
+      if (artifactsOverlayRef.current) {
+        tl.to(artifactsOverlayRef.current, { autoAlpha: 1, duration: 0.10, ease: 'power2.out' }, 2.30);
+      }
+      
+      if (powersOverlayRef.current) {
+        tl.to(powersOverlayRef.current, { autoAlpha: 0, duration: 0.14, ease: 'power2.inOut' }, 2.34);
+      }
+
       if (artifactsHeaderRef.current) {
-        tl.to(artifactsHeaderRef.current, {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.10,
-          ease:      'power2.out',
-        }, 3.42);
+        tl.to(artifactsHeaderRef.current, { autoAlpha: 1, y: 0, duration: 0.10, ease: 'power2.out' }, 2.44);
       }
 
       artifactsRecordsRef.current.forEach((r, i) => {
         if (!r) return;
-        tl.to(r, {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.10,
-          ease:      'power2.out',
-        }, 3.46 + i * 0.04);
+        tl.to(r, { autoAlpha: 1, y: 0, duration: 0.10, ease: 'power2.out' }, 2.48 + i * 0.04);
       });
 
       if (artifactsArchiveActionRef.current) {
-        tl.to(artifactsArchiveActionRef.current, {
-          autoAlpha: 1,
-          y:         0,
-          duration:  0.10,
-          ease:      'power2.out',
-        }, 3.60);
+        tl.to(artifactsArchiveActionRef.current, { autoAlpha: 1, y: 0, duration: 0.10, ease: 'power2.out' }, 2.62);
       }
 
-      /* ── M. Verification Hold  (3.58 → 4.00)  +378vh ───────────── */
-      tl.to({}, { duration: 0.42 }, 3.58);
+      tl.to({}, { duration: 0.46 }, 2.60);
 
-      /*
-        TOTAL TIMELINE: 4.000 units
-        TOTAL SCROLL:   900 × 4.000 = 3600vh
-        RATE:           3600 / 4.000 = 900vh per unit (same pace)
-      */
       ScrollTrigger.create({
         trigger:             canvas,
         pin:                 true,
         pinSpacing:          true,
         start:               'top top',
-        end:                 '+=3600vh',
+        end:                 '+=2934vh',
         scrub:               1.2, // crisp, highly responsive catch-up
         animation:           tl,
         invalidateOnRefresh: true,
         onUpdate(self) {
-          const TOTAL = 4.0;
+          const TOTAL = 3.26;
 
-          /* Activate rail wheel interception only during Quests phase */
+          // Map Quests to strict scroll progress
           const questsStart = 1.474 / TOTAL;
-          const questsEnd = 1.610 / TOTAL;
-          railWheelActive.current = self.progress > questsStart && self.progress < questsEnd;
+          const questsEnd = 1.87 / TOTAL;
+          if (self.progress >= questsStart && self.progress < questsEnd) {
+            const range = questsEnd - questsStart;
+            const normalized = (self.progress - questsStart) / range;
+            const idx = Math.min(Math.floor(normalized * PROJECTS.length), PROJECTS.length - 1);
+            setActiveIndex(idx);
+          }
 
-          // Compute scroll-active index for Powers
-          // Powers interaction: 2.55 → 3.00
-          const powersActiveStart = 2.55 / TOTAL;
-          const powersActiveEnd   = 3.00 / TOTAL;
-          if (self.progress >= powersActiveStart && self.progress < powersActiveEnd) {
-            const range = powersActiveEnd - powersActiveStart;
-            const normalized = (self.progress - powersActiveStart) / range;
-            const idx = Math.min(Math.floor(normalized * 4), 3);
-            if (idx !== lastScrollActiveIndex.current) {
-              lastScrollActiveIndex.current = idx;
-              setScrollActiveIndex(idx);
-            }
-          } else {
-            if (lastScrollActiveIndex.current !== -1) {
-              lastScrollActiveIndex.current = -1;
-              setScrollActiveIndex(-1);
-            }
+          // Powers is visible from 2.10 (after transition) to 2.34 (before Artifacts)
+          const wasActive = powersActiveRef.current;
+          powersActiveRef.current = self.progress >= 2.10 / TOTAL && self.progress < 2.34 / TOTAL;
+
+          // On entry into Powers, snap columns back to equal layout
+          if (powersActiveRef.current && !wasActive) {
+            powersColumnsRef.current.forEach((c, i) => {
+              if (c) gsap.set(c, { left: `${i * 25}%`, width: '25%', opacity: 1 });
+            });
+            powersDividersRef.current.forEach((d, i) => {
+              if (d) gsap.set(d, { left: `${(i + 1) * 25}%` });
+            });
+            powersTechRef.current.forEach(t => { if (t) gsap.set(t, { autoAlpha: 0 }); });
+            powersStatementRef.current.forEach(s => { if (s) gsap.set(s, { autoAlpha: 0 }); });
+            powersTitlesRef.current.forEach(t => { if (t) gsap.set(t, { y: 0 }); });
           }
         },
       });
@@ -545,6 +384,83 @@ export default function SiteCanvas() {
     }, canvas);
 
     return () => ctx.revert();
+  }, []);
+
+  /* ════════════════════════════════════════════════════════════════════════
+     POWERS MOUSE HOVER — uses gsap.to with overwrite:'auto' and direct %
+     strings. No unit-conversion: 25% passed as '25%' string → unambiguous.
+  */
+  useEffect(() => {
+    const EQUAL  = 25;      // % width each column at rest
+    const ACTIVE = 30;      // % width for hovered column
+    const IDLE   = 23.333;  // % width for inactive columns
+
+    let lastIdx = -1;
+
+    const setLayout = (hoverIdx) => {
+      if (!powersActiveRef.current) return;
+      if (hoverIdx === lastIdx) return;
+      lastIdx = hoverIdx;
+
+      const widths = [0, 1, 2, 3].map(i =>
+        hoverIdx >= 0 ? (i === hoverIdx ? ACTIVE : IDLE) : EQUAL
+      );
+      let cur = 0;
+      const lefts = widths.map(w => { const l = cur; cur += w; return l; });
+
+      // Columns — width + left + opacity
+      [0, 1, 2, 3].forEach(i => {
+        const col = powersColumnsRef.current[i];
+        if (col) gsap.to(col, {
+          left:      `${lefts[i]}%`,
+          width:     `${widths[i]}%`,
+          opacity:   hoverIdx >= 0 ? (i === hoverIdx ? 1 : 0.35) : 1,
+          duration:  0.45,
+          ease:      'power3.out',
+          overwrite: 'auto',
+        });
+      });
+
+      // Dividers — follow the right-edge of each column
+      [0, 1, 2].forEach(i => {
+        const div = powersDividersRef.current[i];
+        if (div) gsap.to(div, {
+          left:      `${lefts[i + 1]}%`,
+          duration:  0.45,
+          ease:      'power3.out',
+          overwrite: 'auto',
+        });
+      });
+
+      // Tech annotations + Statements — fade in on active column
+      [0, 1, 2, 3].forEach(i => {
+        const tech = powersTechRef.current[i];
+        const stmt = powersStatementRef.current[i];
+        const title = powersTitlesRef.current[i];
+        if (tech)  gsap.to(tech,  { autoAlpha: i === hoverIdx ? 1 : 0, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+        if (stmt)  gsap.to(stmt,  { autoAlpha: i === hoverIdx ? 1 : 0, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+        if (title) gsap.to(title, { y: i === hoverIdx ? '-8vh' : '0vh', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+      });
+    };
+
+    const onMove = (e) => {
+      if (!powersActiveRef.current) { lastIdx = -1; return; }
+      const idx = Math.min(Math.floor((e.clientX / window.innerWidth) * 4), 3);
+      setLayout(idx);
+    };
+
+    const onLeave = () => {
+      if (!powersActiveRef.current) return;
+      lastIdx = -1;
+      setLayout(-1);
+    };
+
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseleave', onLeave);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseleave', onLeave);
+    };
   }, []);
 
   /* ════════════════════════════════════════════════════════════════════════
@@ -576,6 +492,37 @@ export default function SiteCanvas() {
     rail.addEventListener('wheel', onWheel, { passive: false });
     return () => rail.removeEventListener('wheel', onWheel);
   }, []);
+
+
+  /* ════════════════════════════════════════════════════════════════════════
+     RAIL WHEEL — cycle projects, block Lenis during Quests phase
+  */
+  useEffect(() => {
+    const rail = questsRailRef.current?.parentElement; // the 12vw rail container
+    if (!rail) return;
+
+    let lastCycle = 0;
+    const onWheel = (e) => {
+      if (!railWheelActive.current) return;
+      const isScrollDown = e.deltaY > 0;
+      if (isScrollDown && activeIndex === PROJECTS.length - 1) {
+        // Allow default scroll to advance past Quests
+        return;
+      }
+      if (!isScrollDown && activeIndex === 0) {
+        // Allow default scroll to go back to Lore
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastCycle < 160) return;
+      lastCycle = now;
+      setActiveIndex(prev => isScrollDown ? Math.min(prev + 1, PROJECTS.length - 1) : Math.max(prev - 1, 0));
+    };
+    rail.addEventListener('wheel', onWheel, { passive: false });
+    return () => rail.removeEventListener('wheel', onWheel);
+  }, [activeIndex]);
 
   /* ── Rail number highlight sync ─────────────────────────────────────── */
   useEffect(() => {
@@ -741,7 +688,7 @@ export default function SiteCanvas() {
           </div>
 
           {/* ── BLOCK 3: Right obsidian 30vw — hero rail ────────────── */}
-          <div style={{ width: '30vw', minWidth: '30vw', flex: 'none', height: '100%' }} className="overflow-hidden">
+          <div ref={heroRightBlockRef} style={{ width: '30vw', minWidth: '30vw', flex: 'none', height: '100%' }} className="overflow-hidden">
             <RightColumn />
           </div>
         </div>
@@ -906,25 +853,20 @@ export default function SiteCanvas() {
           </div>
         </div>
 
-        {/* ══════════════════════════════════════════════════════════════
-            ACT IV — POWERS
-            The final act. Mounted inside the same pinned canvas so it
-            shares the master scroll budget. The component owns its
-            own fracture → distribution → emergence choreography and
-            the cursor-proximity active state.
-            ═════════════════════════════════════════════════════════ */}
+        <PowersTransition
+          overlayRef={ptOverlayRef}
+          columnsRef={ptColumnsRef}
+        />
+
+        {/* Powers interactive overlay */}
         <Powers
           overlayRef={powersOverlayRef}
           dividersRef={powersDividersRef}
           columnsRef={powersColumnsRef}
           titleRef={powersTitlesRef}
-          titleEmergenceRef={powersTitleEmergencesRef}
           techRef={powersTechRef}
           statementRef={powersStatementRef}
           headersRef={powersHeadersRef}
-          visibleRef={powersVisibleRef}
-          onCloseDossier={closeDossier}
-          scrollActiveIndex={scrollActiveIndex}
         />
 
         {/* ══════════════════════════════════════════════════════════════
@@ -967,6 +909,12 @@ function DossierOverlay({ project, originX, originY, onClose }) {
   const origin = `${((originX / vpW) * 100).toFixed(3)}% ${((originY / vpH) * 100).toFixed(3)}%`;
 
   useEffect(() => {
+    // Lock Lenis while dossier is open
+    window.__lenis?.stop();
+    return () => window.__lenis?.start();
+  }, []);
+
+  useEffect(() => {
     gsap.set(overlayRef.current, { clipPath: `circle(0px at ${origin})` });
     gsap.set(contentRef.current, { opacity: 0, y: 26 });
     gsap.timeline()
@@ -986,6 +934,7 @@ function DossierOverlay({ project, originX, originY, onClose }) {
 
   return (
     <div ref={overlayRef} onClick={handleClose} data-cursor="hover"
+      onWheel={e => e.stopPropagation()}
       style={{ position: 'fixed', inset: 0, zIndex: 300, background: OBSID, cursor: 'none', overflow: 'hidden', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div ref={contentRef} onClick={e => e.stopPropagation()}
         style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '4.5vh 8vw 5vh', color: CEMENT, overflow: 'hidden' }}>

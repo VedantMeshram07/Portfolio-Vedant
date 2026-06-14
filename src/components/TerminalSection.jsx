@@ -42,10 +42,11 @@ const CUSTOM_CSS = `
     border-bottom: 1px solid ${OBSID}30;
     color: ${OBSID};
     text-decoration: none;
-    font-family: 'var(--font-sans)', sans-serif;
+    font-family: Anton, var(--font-sans), sans-serif;
     text-transform: uppercase;
     font-size: clamp(20px, 2.5vw, 40px);
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: 0.04em;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .contact-link-awwwards:first-child {
@@ -85,15 +86,18 @@ const CUSTOM_CSS = `
   }
 
   .expertise-pill {
-    padding: 0.6rem 1.2rem;
-    border: 1px solid ${OBSID}30;
-    border-radius: 100px;
-    font-family: 'var(--font-sans)', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.05em;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid ${OBSID}35;
+    border-left: 2px solid ${OBSID}35;
+    border-radius: 0;
+    font-family: Anton, var(--font-sans), sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     color: ${OBSID};
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: default;
+    user-select: none;
   }
   .expertise-pill:hover {
     background: ${OBSID};
@@ -198,14 +202,8 @@ export default function TerminalSection() {
           gap:           '12vh',
         }}
       >
-        {/* Top Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div className="status-dot" />
-            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: `${OBSID}80` }}>
-              Available for freelance work
-            </span>
-          </div>
+        {/* Top Header — location + clock only */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', gap: '4vw', flexWrap: 'wrap' }}>
              <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: `${OBSID}80` }}>
                Location: India
@@ -235,7 +233,7 @@ export default function TerminalSection() {
             </h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginTop: 'auto' }}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: `${OBSID}60` }}>
+              <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.35em', textTransform: 'uppercase', color: `${OBSID}55`, userSelect: 'none' }}>
                 Areas of Expertise
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -270,69 +268,60 @@ export default function TerminalSection() {
         </div>
       </div>
 
-      {/* Typography Container */}
+      {/* Typography Container — in normal flow. GSAP scrub grows it 25vh→80vh,
+           pushing the contact content above upward. SVG fills the container
+           via height:100% + preserveAspectRatio:none so the letters scale up. */}
       <div
         ref={containerRef}
         style={{
-          width: '100%',
-          position: 'relative',
+          width:    '100%',
           overflow: 'hidden',
-          height: '25vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          height:   '25vh',
         }}
       >
-        <div style={{ 
-          flex: 1, 
-          position: 'relative', 
-          overflow: 'hidden',
-          padding: '2vh 4vw 0 4vw' 
-        }}>
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 1000 450"
-            preserveAspectRatio="none"
-            style={{ display: 'block', overflow: 'visible' }}
+        {/* SVG sized to fill everything above the footer — no flex, no double-clip */}
+        <svg
+          width="100%"
+          height="calc(100% - max(3.5vh, 28px))"
+          viewBox="0 0 1000 420"
+          preserveAspectRatio="none"
+          style={{ display: 'block' }}
+        >
+          <text
+            x="500"
+            y="390"
+            textAnchor="middle"
+            fontFamily="Anton, sans-serif"
+            fontSize="390"
+            fontWeight="400"
+            fill={OBSID}
+            textLength="1000"
+            lengthAdjust="spacingAndGlyphs"
           >
-            <text
-              x="50%"
-              y="380"
-              textAnchor="middle"
-              fontFamily="var(--font-sans)"
-              fontSize="350px"
-              fontWeight="400"
-              textTransform="uppercase"
-              letterSpacing="0.05em"
-              fill={OBSID}
-              textLength="1000"
-              lengthAdjust="spacingAndGlyphs"
-            >
-              VEDANT
-            </text>
-          </svg>
-        </div>
+            VEDANT
+          </text>
+        </svg>
 
-        {/* Bottom Footer Bar */}
+        {/* Footer — plain block, sits flush below the SVG */}
         <div style={{
-          height: '3.5vh',
-          minHeight: '28px',
-          display: 'flex',
+          height:         'max(3.5vh, 28px)',
+          display:        'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0 4vw',
-          fontFamily: 'var(--font-sans)',
-          fontSize: '9px',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: `${OBSID}80`,
-          flexShrink: 0,
+          alignItems:     'center',
+          padding:        '0 4vw',
+          fontFamily:     'var(--font-sans)',
+          fontSize:       '9px',
+          letterSpacing:  '0.15em',
+          textTransform:  'uppercase',
+          color:          `${OBSID}80`,
         }}>
           <span>Crafting elegant systems &amp; bold digital experiences.</span>
           <span>© {new Date().getFullYear()} Vedant</span>
         </div>
       </div>
+
+
+
     </section>
   );
 }

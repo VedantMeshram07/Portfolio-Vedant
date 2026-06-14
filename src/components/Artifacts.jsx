@@ -455,14 +455,24 @@ function ArchiveLayer({ onClose }) {
   }, [onClose]);
 
   useEffect(() => {
+    // Prevent underlying page scroll while overlay is open
+    window.__lenis?.stop();
+    return () => window.__lenis?.start();
+  }, []);
+
+  useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [handleClose]);
 
+  // Block wheel events so they don't reach Lenis
+  const onWheel = (e) => e.stopPropagation();
+
   return (
     <div
       ref={layerRef}
+      onWheel={onWheel}
       style={{
         position:   'fixed',
         inset:      0,
