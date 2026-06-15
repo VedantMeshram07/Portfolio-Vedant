@@ -448,7 +448,7 @@ export default function MobileSite() {
                       margin:       0,
                       lineHeight:   1.5,
                     }}>
-                      {project.outcome}
+                      {p.outcome}
                     </p>
                   </div>
                 </div>
