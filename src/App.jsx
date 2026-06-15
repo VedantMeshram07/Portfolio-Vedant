@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Awakening      from './components/Awakening.jsx';
 import Cursor         from './components/Cursor.jsx';
 import SiteCanvas     from './components/SiteCanvas.jsx';
+import MobileSite     from './components/MobileSite.jsx';
 import TerminalSection from './components/TerminalSection.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -25,9 +26,19 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Computed once — won't change mid-session
-  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  const isCoarsePointer = typeof window !== 'undefined' ? window.matchMedia('(pointer: coarse)').matches : false;
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     gsap.ticker.lagSmoothing(0);
@@ -75,8 +86,14 @@ export default function App() {
       )}
 
       <main>
-        <SiteCanvas />
-        <TerminalSection />
+        {isMobile ? (
+          <MobileSite />
+        ) : (
+          <>
+            <SiteCanvas />
+            <TerminalSection />
+          </>
+        )}
       </main>
     </>
   );
