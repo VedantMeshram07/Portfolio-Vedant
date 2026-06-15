@@ -74,10 +74,12 @@ const RightColumn = () => {
   useEffect(() => {
     if (panelState !== 'QUIET') return
     let ctx
+    let unmounted = false
     document.fonts.ready.then(() => {
+      if (unmounted) return
       ctx = gsap.context(() => {
         gsap.fromTo(
-          wordRefs.current,
+          wordRefs.current.filter(Boolean),
           { opacity: 0, y: 14 },
           {
             opacity: 1,
@@ -90,7 +92,10 @@ const RightColumn = () => {
         )
       })
     })
-    return () => ctx?.revert()
+    return () => {
+      unmounted = true
+      ctx?.revert()
+    }
   }, [panelState])
 
   // ── Effect 2: flicker cycle. Only active while panelState === 'QUIET'.

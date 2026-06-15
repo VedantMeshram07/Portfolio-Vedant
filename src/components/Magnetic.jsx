@@ -30,6 +30,10 @@ const Magnetic = ({ strength = 0.35, className = '', children, ...rest }) => {
   const wrapRef = useRef(null);
 
   useEffect(() => {
+    // Bypass magnetic pull entirely on touch devices to prevent jumpy taps
+    const isCoarse = typeof window !== 'undefined' ? window.matchMedia('(pointer: coarse)').matches : false;
+    if (isCoarse) return;
+
     const el = wrapRef.current;
     if (!el) return;
 

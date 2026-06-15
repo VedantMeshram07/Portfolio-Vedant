@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Magnetic from './Magnetic.jsx';
@@ -83,29 +83,46 @@ const PROJECTS = [
 ];
 
 /* ─── helpers ────────────────────────────────────────────────────────────── */
-const STRIP_START_XPCT = -(30 / 130) * 100; // ≈ -23.077
-
 /* ─── mobile responsive overrides ───────────────────────────────────────── */
 const MOBILE_CSS = `
-  @media (max-width: 768px) {
-    /* Lore block — 30vw becomes ~112px; reduce text to fit */
-    .lore-role   { font-size: 13px !important; line-height: 1.1 !important; }
-    .lore-detail { font-size: 10px !important; }
-    .lore-stack  { font-size: 8px  !important; }
+  .strip-wrapper { width: 130vw; }
+  .left-block { width: 30vw; min-width: 30vw; }
+  .cement-block { width: 70vw; min-width: 70vw; }
+  .right-block { width: 30vw; min-width: 30vw; }
+
+  @media (max-width: 900px) {
+    .strip-wrapper { width: 270vw !important; }
+    .left-block { width: 85vw !important; min-width: 85vw !important; }
+    .cement-block { width: 100vw !important; min-width: 100vw !important; }
+    .right-block { width: 85vw !important; min-width: 85vw !important; }
+
+    .hero-container { padding-left: 20px !important; padding-right: 20px !important; }
+    .hero-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+    .hero-tagline { font-size: clamp(2.3rem, 11vw, 4rem) !important; padding-bottom: 24px !important; }
+    
+    /* Lore block — reduce text to fit */
+    .lore-role   { font-size: 20px !important; line-height: 1.1 !important; }
+    .lore-detail { font-size: 14px !important; }
+    .lore-stack  { font-size: 10px !important; }
 
     /* Manifesto — stack 5fr/8fr grid to single column */
-    .manifesto-body-grid { grid-template-columns: 1fr !important; }
+    .manifesto-container { padding-left: 20px !important; padding-right: 20px !important; }
+    .manifesto-statement { font-size: clamp(2.1rem, 10vw, 4rem) !important; margin-bottom: 12px !important; }
+    .manifesto-principles { font-size: clamp(1.4rem, 6vw, 2.8rem) !important; }
+    .manifesto-body-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+    .manifesto-text { font-size: 15px !important; line-height: 1.5 !important; }
 
     /* Quests — prevent project title overflow in narrow column */
-    .quests-proj-title { font-size: clamp(1.3rem, 5.5vw, 2.2rem) !important; }
-    .quests-proj-meta  { flex-wrap: wrap !important; gap: 4px 10px !important; }
+    .quests-proj-title { font-size: clamp(1.4rem, 6vw, 2.5rem) !important; flex-direction: column !important; align-items: flex-start !important; line-height: 1.1 !important; gap: 4px !important; }
+    .quests-proj-meta  { margin-top: 8px !important; flex-wrap: wrap !important; gap: 6px 12px !important; }
 
     /* Powers — show tech + statement by default (no hover on touch) */
-    .powers-title { font-size: clamp(0.65rem, 3.2vw, 1.2rem) !important; letter-spacing: -0.01em !important; }
-    .powers-tech  { opacity: 0.85 !important; visibility: visible !important; font-size: 8px !important; gap: 2px !important; }
-    .powers-stmt  { opacity: 0.65 !important; visibility: visible !important; font-size: 10px !important; }
+    .powers-title { font-size: clamp(0.75rem, 3.5vw, 1.2rem) !important; letter-spacing: -0.01em !important; }
+    .powers-tech  { opacity: 0.85 !important; visibility: visible !important; font-size: 9px !important; gap: 2px !important; }
+    .powers-stmt  { opacity: 0.65 !important; visibility: visible !important; font-size: 11px !important; }
   }
 `;
+
 
 const splitWords = (text) =>
   text.split(/(\s+)/).map((chunk, i) => {
@@ -137,7 +154,7 @@ const BODY_CHUNKS = splitWords(MANIFESTO_TEXT);
    Since all phases share ONE pinned element, there is ZERO handoff problem.
    No z-index fighting. No separate pin spacers. No gap.
    ═══════════════════════════════════════════════════════════════════════════ */
-export default function SiteCanvas() {
+export default function SiteCanvas({ isMobile = false }) {
   /* ── refs (scrubbed animation targets) ──────────────────────────────── */
   const canvasRef       = useRef(null);  // pinned 100vh frame
   const stripRef        = useRef(null);  // 130vw horizontal strip
@@ -211,7 +228,7 @@ export default function SiteCanvas() {
   /* ════════════════════════════════════════════════════════════════════════
      MAIN SCROLL ANIMATION — single pin + single scrubbed timeline
   */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const canvas       = canvasRef.current;
     const strip        = stripRef.current;
     const leftBlock    = leftBlockRef.current;
@@ -229,7 +246,7 @@ export default function SiteCanvas() {
     if (!canvas || !strip) return;
 
     /* ── initial states ──────────────────────────────────────────────── */
-    gsap.set(strip,         { xPercent: STRIP_START_XPCT, force3D: true });
+    gsap.set(strip,         { x: () => -leftBlock.offsetWidth, force3D: true });
     gsap.set(heroContent,   { autoAlpha: 1, y: 0 });
     gsap.set(manifestoPane, { autoAlpha: 0, y: 40 });
     gsap.set(loreItems,     { x: -36, y: 24, autoAlpha: 0, scale: 0.97 });
@@ -275,7 +292,7 @@ export default function SiteCanvas() {
       /* ───────────────────────────────────────────────────────────── */
 
       /* ── 1. STRIP SLIDE  (0.20 → 1.00) ───────────────────────────── */
-      tl.to(strip, { xPercent: 0, ease: 'none', duration: 0.80 }, 0.20);
+      tl.to(strip, { x: 0, ease: 'none', duration: 0.80 }, 0.20);
 
       /* ── 2. HERO FADE   (0.20 → 0.55) ───────────────────────────── */
       const heroFadeTargets = [heroContent, heroRightBlockRef.current].filter(Boolean);
@@ -305,7 +322,8 @@ export default function SiteCanvas() {
       tl.to(strip, { autoAlpha: 0, duration: 0.001, ease: 'none' }, 1.133);
 
       if (questsRailWidth) {
-        tl.to(questsRailWidth, { width: '12vw', duration: 0.30, ease: 'power2.inOut' }, 1.134);
+        gsap.set(questsRailWidth, { width: () => leftBlock.offsetWidth || window.innerWidth });
+        tl.to(questsRailWidth, { width: () => window.innerWidth <= 900 ? '25vw' : '12vw', duration: 0.30, ease: 'power2.inOut' }, 1.134);
       }
 
       if (transitionPhraseRef.current) {
@@ -381,16 +399,17 @@ export default function SiteCanvas() {
         pin:                 true,
         pinSpacing:          true,
         start:               'top top',
-        end:                 '+=2934vh',
+        end:                 isMobile ? '+=1914vh' : '+=2934vh',
         scrub:               1.2, // crisp, highly responsive catch-up
-        animation:           tl,
+        animation:           isMobile ? gsap.timeline().add(tl.tweenFromTo(1.133, 3.26)) : tl,
         invalidateOnRefresh: true,
         onUpdate(self) {
-          const TOTAL = 3.26;
+          const TOTAL = isMobile ? (3.26 - 1.133) : 3.26;
+          const offset = isMobile ? 1.133 : 0;
 
           // Map Quests to strict scroll progress
-          const questsStart = 1.474 / TOTAL;
-          const questsEnd = 1.87 / TOTAL;
+          const questsStart = (1.474 - offset) / TOTAL;
+          const questsEnd = (1.87 - offset) / TOTAL;
           if (self.progress >= questsStart && self.progress < questsEnd) {
             const range = questsEnd - questsStart;
             const normalized = (self.progress - questsStart) / range;
@@ -398,9 +417,11 @@ export default function SiteCanvas() {
             setActiveIndex(idx);
           }
 
-          // Powers is visible from 2.10 (after transition) to 2.34 (before Artifacts)
+          // Powers is visible from 2.10 to 2.34
+          const powersStart = (2.10 - offset) / TOTAL;
+          const powersEnd = (2.34 - offset) / TOTAL;
           const wasActive = powersActiveRef.current;
-          powersActiveRef.current = self.progress >= 2.10 / TOTAL && self.progress < 2.34 / TOTAL;
+          powersActiveRef.current = self.progress >= powersStart && self.progress < powersEnd;
 
           // On entry into Powers, snap columns back to equal layout
           if (powersActiveRef.current && !wasActive) {
@@ -651,17 +672,18 @@ export default function SiteCanvas() {
             ══════════════════════════════════════════════════════════════ */}
         <div
           ref={stripRef}
+          className="strip-wrapper"
           style={{
             position: 'absolute', top: 0, left: 0,
-            width: '130vw', height: '100%',
-            display: 'flex', willChange: 'transform',
+            height: '100%',
+            display: isMobile ? 'none' : 'flex', willChange: 'transform',
           }}
         >
           {/* ── BLOCK 1: Left obsidian 30vw — LORE ─────────────────── */}
           <div
             ref={leftBlockRef}
-            style={{ width: '30vw', minWidth: '30vw', flex: 'none', height: '100%', willChange: 'width' }}
-            className="bg-[#0A0A0A] text-[#D4D3D0] flex flex-col overflow-hidden"
+            style={{ flex: 'none', height: '100%', willChange: 'width' }}
+            className="left-block bg-[#0A0A0A] text-[#D4D3D0] flex flex-col overflow-hidden"
           >
             <div className="px-7 pt-8 shrink-0">
               <span className="font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#D4D3D0]/50 select-none">LORE</span>
@@ -685,16 +707,16 @@ export default function SiteCanvas() {
 
           {/* ── BLOCK 2: Cement 70vw — shared hero/manifesto ────────── */}
           <div
-            style={{ width: '70vw', minWidth: '70vw', flex: 'none', height: '100%', position: 'relative' }}
-            className="bg-[#D4D3D0] overflow-hidden"
+            style={{ flex: 'none', height: '100%', position: 'relative' }}
+            className="cement-block bg-[#D4D3D0] overflow-hidden"
           >
             {/* Hero content */}
-            <div ref={heroContentRef} className="absolute inset-0 flex flex-col px-10 md:px-14 py-8">
-              <header className="flex justify-between items-start font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 shrink-0">
+            <div ref={heroContentRef} className="hero-container absolute inset-0 flex flex-col px-10 md:px-14 py-8">
+              <header className="hero-header flex justify-between items-start font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 shrink-0">
                 <span data-cursor="name" className='text-base'>Vedant Meshram</span>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=meshramvedant7@gmail.com" target="_blank" rel="noopener noreferrer" data-cursor="hover" className="cursor-none text-base" style={{ textDecoration: 'none', color: 'inherit' }}>Get in touch ↗</a>
               </header>
-              <div className="flex-1 flex flex-col items-start justify-end font-sans-brutal uppercase tracking-tighter leading-[0.97] text-[clamp(2.8rem,8vw,8.5rem)] pb-3 text-[#0A0A0A]">
+              <div className="hero-tagline flex-1 flex flex-col items-start justify-end font-sans-brutal uppercase tracking-tighter leading-[0.97] text-[clamp(2.8rem,8vw,8.5rem)] pb-3 text-[#0A0A0A]">
                 {TAGLINE_LINES.map((line, i) => (
                   <div key={i} ref={(el) => { taglineRefs.current[i] = el; }} data-cursor="hover" className="cursor-none">{line}</div>
                 ))}
@@ -702,14 +724,14 @@ export default function SiteCanvas() {
             </div>
 
             {/* Manifesto content */}
-            <div ref={manifestoRef} className="absolute inset-0 flex flex-col px-10 md:px-14">
+            <div ref={manifestoRef} className="manifesto-container absolute inset-0 flex flex-col px-10 md:px-14">
               <div className="pt-8 flex justify-between items-baseline shrink-0">
                 <span className="font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 select-none">MANIFESTO</span>
                 <span className="font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/40 select-none tabular-nums">02</span>
               </div>
               <div className="mt-4 h-px bg-[#0A0A0A]/20 shrink-0" />
               <div className="flex-1 flex flex-col pt-10">
-                <div ref={statementRef} className="font-sans-brutal uppercase tracking-tighter leading-[0.92] text-[clamp(2.4rem,5.5vw,6.2rem)] text-[#0A0A0A] shrink-0" data-cursor="hover">
+                <div ref={statementRef} className="manifesto-statement font-sans-brutal uppercase tracking-tighter leading-[0.92] text-[clamp(2.4rem,5.5vw,6.2rem)] text-[#0A0A0A] shrink-0" data-cursor="hover">
                   <div>BASICALLY,</div>
                   <div>I MAKE</div>
                   <div>COOL PROJECTS.</div>
@@ -720,14 +742,14 @@ export default function SiteCanvas() {
                     {PRINCIPLES.map(({ word, sub }, i) => (
                       <div key={i} ref={(el) => { principleRefs.current[i] = el; }} className="border-t border-[#0A0A0A]/20 pt-3 pb-4">
                         <BrutalistSlice mainText={word} subText={sub} travel={34} as="div"
-                          className="font-sans-brutal uppercase tracking-tighter leading-[1.0] text-[clamp(1.7rem,2.8vw,3.2rem)] text-[#0A0A0A]"
+                          className="manifesto-principles font-sans-brutal uppercase tracking-tighter leading-[1.0] text-[clamp(1.7rem,2.8vw,3.2rem)] text-[#0A0A0A]"
                           mainClassName="font-sans-brutal text-[#0A0A0A]" />
                       </div>
                     ))}
                   </div>
                   <div className="flex flex-col justify-end pb-1 border-t border-[#0A0A0A]/20 pt-3">
                     <p className="sr-only">{MANIFESTO_TEXT}</p>
-                    <p aria-hidden="true" className="font-serif text-[17px] md:text-[20px] leading-[1.72] flex flex-wrap gap-x-[0.3em] gap-y-1">
+                    <p aria-hidden="true" className="manifesto-text font-serif text-[17px] md:text-[20px] leading-[1.72] flex flex-wrap gap-x-[0.3em] gap-y-1">
                       {BODY_CHUNKS.map((chunk, idx) => {
                         if (typeof chunk === 'string') return chunk;
                         return (
@@ -745,7 +767,7 @@ export default function SiteCanvas() {
           </div>
 
           {/* ── BLOCK 3: Right obsidian 30vw — hero rail ────────────── */}
-          <div ref={heroRightBlockRef} style={{ width: '30vw', minWidth: '30vw', flex: 'none', height: '100%' }} className="overflow-hidden">
+          <div ref={heroRightBlockRef} style={{ flex: 'none', height: '100%' }} className="right-block overflow-hidden">
             <RightColumn />
           </div>
         </div>
@@ -776,7 +798,6 @@ export default function SiteCanvas() {
           <div
             ref={questsRailWidthRef}
             style={{
-              width:         '30vw',
               flexShrink:    0,
               height:        '100%',
               background:    OBSID,
@@ -808,7 +829,7 @@ export default function SiteCanvas() {
               {/* Numbers */}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', padding: '1.5rem 1.25rem' }}>
                 {PROJECTS.map((p, i) => (
-                  <div key={i} onMouseEnter={() => setActiveIndex(i)} style={{ display: 'flex', flexDirection: 'column', gap: '5px', cursor: 'none' }}>
+                  <div key={i} onMouseEnter={() => setActiveIndex(i)} onClick={() => setActiveIndex(i)} style={{ display: 'flex', flexDirection: 'column', gap: '5px', cursor: 'none' }}>
                     <span ref={el => { numRefs.current[i] = el; }}
                       style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', letterSpacing: '0.3em', textTransform: 'uppercase', color: i === 0 ? CEMENT : `${CEMENT}30`, userSelect: 'none', display: 'block', transition: 'color 0.35s ease' }}>
                       {p.num}

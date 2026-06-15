@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -135,11 +135,12 @@ export default function TerminalSection() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const section   = sectionRef.current;
     const container = containerRef.current;
     if (!section || !container) return;
 
+    let unmounted = false;
     let ctx;
 
     const init = async () => {
@@ -149,6 +150,7 @@ export default function TerminalSection() {
         /* already loaded */
       }
       await document.fonts.ready;
+      if (unmounted) return;
 
       ctx = gsap.context(() => {
         const tl = gsap.timeline({
@@ -186,6 +188,7 @@ export default function TerminalSection() {
     window.addEventListener('resize', onResize);
 
     return () => {
+      unmounted = true;
       window.removeEventListener('resize', onResize);
       ctx?.revert();
     };
@@ -297,8 +300,9 @@ export default function TerminalSection() {
           height:   '25vh',
         }}
       >
-        {/* SVG sized to fill everything above the footer — no flex, no double-clip */}
+        {/* Desktop: SVG sized to fill everything above the footer */}
         <svg
+          className="hidden md:block"
           width="100%"
           height="calc(100% - max(3.5vh, 28px))"
           viewBox="0 0 1000 420"
@@ -319,6 +323,19 @@ export default function TerminalSection() {
             VEDANT
           </text>
         </svg>
+
+        {/* Mobile: Standard text that doesn't distort into spaghetti */}
+        <div 
+          className="md:hidden flex items-end justify-center w-full"
+          style={{ height: 'calc(100% - max(3.5vh, 28px))' }}
+        >
+          <span 
+            style={{ fontFamily: 'Anton, sans-serif' }}
+            className="text-[clamp(4rem,25vw,10rem)] leading-[0.8] text-[#0A0A0A] tracking-tight"
+          >
+            VEDANT
+          </span>
+        </div>
 
         {/* Footer — plain block, sits flush below the SVG */}
         <div style={{

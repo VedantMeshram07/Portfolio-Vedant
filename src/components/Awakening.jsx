@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 
 // Moment the preloader starts fading to the landing page. Hero.jsx
@@ -135,9 +135,8 @@ const Awakening = ({ onComplete }) => {
       <div
         ref={counterRef}
         className="font-sans-brutal text-[#0A0A0A] text-[clamp(4rem,16vw,13rem)] leading-none tracking-[-0.02em] select-none tabular-nums"
-      >
-        0
-      </div>
+        dangerouslySetInnerHTML={{ __html: '0' }}
+      />
     </div>
   )
 }

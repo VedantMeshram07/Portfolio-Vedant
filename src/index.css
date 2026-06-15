@@ -30,8 +30,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-    overscroll-behavior: none;
+    overflow-x: clip;
   }
 
   /* Hide default cursor only on fine-pointer (mouse) devices */
@@ -47,7 +46,7 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* Keep the custom cursor in charge over every interactive element too.
