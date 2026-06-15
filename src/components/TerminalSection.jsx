@@ -152,6 +152,14 @@ export default function TerminalSection() {
       await document.fonts.ready;
       if (unmounted) return;
 
+      const isMobile = window.innerWidth <= 900;
+
+      if (isMobile) {
+        gsap.set(section, { paddingBottom: 0 });
+        gsap.set(container, { display: 'none' });
+        return;
+      }
+
       ctx = gsap.context(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -307,7 +315,6 @@ export default function TerminalSection() {
           height="calc(100% - max(3.5vh, 28px))"
           viewBox="0 0 1000 420"
           preserveAspectRatio="none"
-          style={{ display: 'block' }}
         >
           <text
             x="500"
@@ -323,19 +330,6 @@ export default function TerminalSection() {
             VEDANT
           </text>
         </svg>
-
-        {/* Mobile: Standard text that doesn't distort into spaghetti */}
-        <div 
-          className="md:hidden flex items-end justify-center w-full"
-          style={{ height: 'calc(100% - max(3.5vh, 28px))' }}
-        >
-          <span 
-            style={{ fontFamily: 'Anton, sans-serif' }}
-            className="text-[clamp(4rem,25vw,10rem)] leading-[0.8] text-[#0A0A0A] tracking-tight"
-          >
-            VEDANT
-          </span>
-        </div>
 
         {/* Footer — plain block, sits flush below the SVG */}
         <div style={{

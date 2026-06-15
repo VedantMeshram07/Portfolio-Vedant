@@ -399,13 +399,13 @@ export default function SiteCanvas({ isMobile = false }) {
         pin:                 true,
         pinSpacing:          true,
         start:               'top top',
-        end:                 isMobile ? '+=1914vh' : '+=2934vh',
+        end:                 isMobile ? '+=800vh' : '+=2934vh',
         scrub:               1.2, // crisp, highly responsive catch-up
-        animation:           isMobile ? gsap.timeline().add(tl.tweenFromTo(1.133, 3.26)) : tl,
+        animation:           isMobile ? gsap.timeline().add(tl.tweenFromTo(1.434, 3.26)) : tl,
         invalidateOnRefresh: true,
         onUpdate(self) {
-          const TOTAL = isMobile ? (3.26 - 1.133) : 3.26;
-          const offset = isMobile ? 1.133 : 0;
+          const TOTAL = isMobile ? (3.26 - 1.434) : 3.26;
+          const offset = isMobile ? 1.434 : 0;
 
           // Map Quests to strict scroll progress
           const questsStart = (1.474 - offset) / TOTAL;
