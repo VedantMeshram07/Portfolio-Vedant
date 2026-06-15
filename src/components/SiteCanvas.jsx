@@ -71,6 +71,28 @@ const PROJECTS = [
 /* ─── helpers ────────────────────────────────────────────────────────────── */
 const STRIP_START_XPCT = -(30 / 130) * 100; // ≈ -23.077
 
+/* ─── mobile responsive overrides ───────────────────────────────────────── */
+const MOBILE_CSS = `
+  @media (max-width: 768px) {
+    /* Lore block — 30vw becomes ~112px; reduce text to fit */
+    .lore-role   { font-size: 13px !important; line-height: 1.1 !important; }
+    .lore-detail { font-size: 10px !important; }
+    .lore-stack  { font-size: 8px  !important; }
+
+    /* Manifesto — stack 5fr/8fr grid to single column */
+    .manifesto-body-grid { grid-template-columns: 1fr !important; }
+
+    /* Quests — prevent project title overflow in narrow column */
+    .quests-proj-title { font-size: clamp(1.3rem, 5.5vw, 2.2rem) !important; }
+    .quests-proj-meta  { flex-wrap: wrap !important; gap: 4px 10px !important; }
+
+    /* Powers — show tech + statement by default (no hover on touch) */
+    .powers-title { font-size: clamp(0.65rem, 3.2vw, 1.2rem) !important; letter-spacing: -0.01em !important; }
+    .powers-tech  { opacity: 0.85 !important; visibility: visible !important; font-size: 8px !important; gap: 2px !important; }
+    .powers-stmt  { opacity: 0.65 !important; visibility: visible !important; font-size: 10px !important; }
+  }
+`;
+
 const splitWords = (text) =>
   text.split(/(\s+)/).map((chunk, i) => {
     if (/^\s+$/.test(chunk)) return chunk;
@@ -457,9 +479,29 @@ export default function SiteCanvas() {
 
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
+
+    /* Touch support for Powers — map touch X position to column hover */
+    const onTouchMove = (e) => {
+      if (!powersActiveRef.current) return;
+      const touch = e.touches[0];
+      if (!touch) return;
+      const col = Math.floor((touch.clientX / window.innerWidth) * 4);
+      const idx = Math.max(0, Math.min(3, col));
+      setLayout(idx);
+    };
+    const onTouchEnd = () => {
+      if (!powersActiveRef.current) return;
+      lastIdx = -1;
+      setLayout(-1);
+    };
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend',  onTouchEnd,  { passive: true });
+
     return () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend',  onTouchEnd);
     };
   }, []);
 
@@ -577,6 +619,7 @@ export default function SiteCanvas() {
   */
   return (
     <>
+      <style>{MOBILE_CSS}</style>
       {/* ══════════════════════════════════════════════════════════════════
           THE CANVAS — 100vh, pinned for 1680vh of scroll budget.
           Everything inside is driven by the scrubbed timeline.
@@ -616,9 +659,9 @@ export default function SiteCanvas() {
                   <Magnetic strength={0.35}>
                     <div className="flex flex-col gap-[6px] select-none">
                       <span className="font-sans-brutal text-[11px] tracking-[0.3em] uppercase text-[#FF4D00]">{item.year}</span>
-                      <span className="font-sans-brutal text-2xl md:text-3xl leading-[1.0] uppercase tracking-tight">{item.role}</span>
-                      <span className="font-serif italic text-base md:text-[17px] text-[#D4D3D0]/80 leading-[1.4]">{item.detail}</span>
-                      <span className="font-sans-brutal text-[11px] tracking-[0.22em] uppercase text-[#D4D3D0]/45 mt-1">{item.stack}</span>
+                      <span className="lore-role font-sans-brutal text-2xl md:text-3xl leading-[1.0] uppercase tracking-tight">{item.role}</span>
+                      <span className="lore-detail font-serif italic text-base md:text-[17px] text-[#D4D3D0]/80 leading-[1.4]">{item.detail}</span>
+                      <span className="lore-stack font-sans-brutal text-[11px] tracking-[0.22em] uppercase text-[#D4D3D0]/45 mt-1">{item.stack}</span>
                     </div>
                   </Magnetic>
                 </div>
@@ -658,7 +701,7 @@ export default function SiteCanvas() {
                   <div>THAT GO BEYOND.</div>
                 </div>
                 <div className="flex-1 min-h-[3vh]" />
-                <div className="grid shrink-0" style={{ gridTemplateColumns: '5fr 8fr', gap: '0 2.5vw' }}>
+                <div className="grid manifesto-body-grid shrink-0" style={{ gridTemplateColumns: '5fr 8fr', gap: '0 2.5vw' }}>
                   <div className="flex flex-col justify-end gap-0 pb-1">
                     {PRINCIPLES.map(({ word, sub }, i) => (
                       <div key={i} ref={(el) => { principleRefs.current[i] = el; }} className="border-t border-[#0A0A0A]/20 pt-3 pb-4">
@@ -811,7 +854,14 @@ export default function SiteCanvas() {
                 return (
                   <div key={project.num}
                     onMouseEnter={() => setActiveIndex(i)}
-                    onClick={() => openDossier(i)}
+                    onClick={() => {
+                      /* Touch-friendly: first tap highlights, second tap opens dossier */
+                      if (activeIndex === i) {
+                        openDossier(i);
+                      } else {
+                        setActiveIndex(i);
+                      }
+                    }}
                     data-cursor="hover"
                     style={{
                       flex: 1, position: 'relative', display: 'flex', flexDirection: 'column',
@@ -825,13 +875,13 @@ export default function SiteCanvas() {
 
                     {/* Title + meta */}
                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
-                      <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(2.1rem, 4.4vw, 5rem)', lineHeight: '0.92', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.01em', color: OBSID, margin: 0, display: 'flex', alignItems: 'baseline', gap: '0.04em', userSelect: 'none', flexShrink: 0 }}>
+                      <h2 className="quests-proj-title" style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(2.1rem, 4.4vw, 5rem)', lineHeight: '0.92', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.01em', color: OBSID, margin: 0, display: 'flex', alignItems: 'baseline', gap: '0.04em', userSelect: 'none', flexShrink: 0 }}>
                         <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', fontWeight: 400, color: `${OBSID}50`, marginRight: '1.5rem', alignSelf: 'center' }}>{project.num}</span>
                         {project.title}
                         <span ref={el => { periodRefs.current[i] = el; }} aria-hidden="true"
                           style={{ color: BLUE, fontSize: '0.82em', fontFamily: '"Georgia", serif', fontWeight: 400, display: 'inline-block', transformOrigin: 'center bottom', willChange: 'transform' }}>.</span>
                       </h2>
-                      <div style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', flexShrink: 0 }}>
+                      <div className="quests-proj-meta" style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', flexShrink: 0 }}>
                         <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.28em', textTransform: 'uppercase', color: ORANGE,         userSelect: 'none' }}>{project.year}</span>
                         <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.22em', textTransform: 'uppercase', color: `${OBSID}55`, userSelect: 'none' }}>{project.role}</span>
                         <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.2em',  textTransform: 'uppercase', color: BLUE,           userSelect: 'none', opacity: 0.85 }}>{project.status}</span>

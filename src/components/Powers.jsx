@@ -177,7 +177,7 @@ export default function Powers({
               ref={el => { if (titleRef) titleRef.current[i] = el; }}
               style={{ willChange: 'transform' }}
             >
-              <h2 style={{
+              <h2 className="powers-title" style={{
                 fontFamily:    'var(--font-sans)',
                 fontSize:      'clamp(1.8rem, 3vw, 4rem)',
                 lineHeight:    0.92,
@@ -209,6 +209,7 @@ export default function Powers({
             }}>
               <div
                 ref={el => { if (techRef) techRef.current[i] = el; }}
+                className="powers-tech"
                 style={{
                   display:       'flex',
                   flexDirection: 'column',
@@ -239,6 +240,7 @@ export default function Powers({
 
               <p
                 ref={el => { if (statementRef) statementRef.current[i] = el; }}
+                className="powers-stmt"
                 style={{
                   fontFamily:   'var(--font-serif)',
                   fontStyle:    'italic',
