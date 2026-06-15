@@ -17,7 +17,7 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 900 : false);
 
   // Computed once — won't change mid-session
   const isCoarsePointer = typeof window !== 'undefined' ? window.matchMedia('(pointer: coarse)').matches : false;

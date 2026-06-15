@@ -121,6 +121,12 @@ const CUSTOM_CSS = `
     color: ${CEMENT};
     border-color: ${OBSID};
   }
+
+  @media (max-width: 900px) {
+    .desktop-vedant-svg {
+      display: none !important;
+    }
+  }
 `;
 
 export default function TerminalSection() {
@@ -310,7 +316,7 @@ export default function TerminalSection() {
       >
         {/* Desktop: SVG sized to fill everything above the footer */}
         <svg
-          className="hidden md:block"
+          className="desktop-vedant-svg hidden md:block"
           width="100%"
           height="calc(100% - max(3.5vh, 28px))"
           viewBox="0 0 1000 420"
