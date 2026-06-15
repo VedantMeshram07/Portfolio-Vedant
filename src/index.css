@@ -32,7 +32,14 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     overscroll-behavior: none;
-    cursor: none; /* Hide default cursor — Cursor.jsx provides the custom one */
+  }
+
+  /* Hide default cursor only on fine-pointer (mouse) devices */
+  @media (pointer: fine) {
+    html,
+    body {
+      cursor: none;
+    }
   }
 
   #root,
@@ -44,11 +51,34 @@
   }
 
   /* Keep the custom cursor in charge over every interactive element too.
-     Tailwind's `cursor-pointer` is overridden by this selector. */
-  a,
-  button,
-  [data-cursor='hover'] {
-    cursor: none;
+     Tailwind's `cursor-pointer` is overridden by this selector.
+     Scoped to fine-pointer (mouse) devices only — touch devices keep
+     their native tap indicator. */
+  @media (pointer: fine) {
+    a,
+    button,
+    [data-cursor='hover'] {
+      cursor: none;
+    }
+  }
+
+  /* On coarse-pointer (touch/stylus) devices: restore natural cursors
+     so interactive elements remain clearly tappable. */
+  @media (pointer: coarse) {
+    html,
+    body {
+      cursor: auto !important;
+    }
+    a,
+    button,
+    [data-cursor='hover'] {
+      cursor: pointer !important;
+    }
+    /* Improve tap responsiveness */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
   }
 
   /* Hide default scrollbars (Lenis handles smooth scrolling) */
