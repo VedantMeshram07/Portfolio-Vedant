@@ -24,27 +24,66 @@ const BLUE   = '#3B82F6';
 
 export const POWERS_DATA = [
   {
-    id: '01', title: 'APPLICATIONS',
-    techs: ['React', 'Next.js', 'TypeScript', 'WebGL'],
-    statement: 'Crafting high-performance interfaces with architectural precision and editorial clarity.',
+    id: '01',
+    title: 'PRODUCTS',
+    techs: [
+      'React',
+      'JavaScript',
+      'Laravel',
+      'SQL',
+      'UI/UX',
+      'Responsive Design'
+    ],
+    statement:
+      'Building software that people can use, learn from, and rely on every day.',
     accent: '#3B82F6',
   },
+
   {
-    id: '02', title: 'SYSTEMS',
-    techs: ['Python', 'Node.js', 'FastAPI', 'PostgreSQL'],
-    statement: 'Building scalable systems and resilient API architectures for production load.',
+    id: '02',
+    title: 'SYSTEMS',
+    techs: [
+      'Python',
+      'FastAPI',
+      'REST APIs',
+      'Databases',
+      'Authentication',
+      'Automation'
+    ],
+    statement:
+      'Designing the foundations that keep applications scalable, maintainable, and reliable.',
     accent: '#FF4D00',
   },
+
   {
-    id: '03', title: 'INTELLIGENCE',
-    techs: ['Python', 'LangChain', 'RAG', 'Agents'],
-    statement: 'Designing autonomous systems that reason, retrieve and act.',
+    id: '03',
+    title: 'INTELLIGENCE',
+    techs: [
+      'LangGraph',
+      'RAG',
+      'AI Agents',
+      'NLP',
+      'Prompt Engineering',
+      'Semantic Search'
+    ],
+    statement:
+      'Exploring how software can reason, retrieve knowledge, and assist with complex tasks.',
     accent: '#10B981',
   },
+
   {
-    id: '04', title: 'INFRASTRUCTURE',
-    techs: ['Docker', 'Kubernetes', 'AWS', 'Terraform'],
-    statement: 'Operating distributed systems that scale, self-heal, and stay observable.',
+    id: '04',
+    title: 'FOUNDATIONS',
+    techs: [
+      'Algorithms',
+      'Data Structures',
+      'Problem Solving',
+      'OOP',
+      'Git',
+      'Debugging'
+    ],
+    statement:
+      'Strong fundamentals are behind every project I build, regardless of the technology stack.',
     accent: '#8B5CF6',
   },
 ];

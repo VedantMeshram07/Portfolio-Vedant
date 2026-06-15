@@ -13,43 +13,56 @@ const ORANGE = '#FF4D00';
 /* ─── data ───────────────────────────────────────────────────────────── */
 const PROJECTS = [
   {
-    num: '01', title: 'AURA', year: '2026', role: 'Founding Engineer',
-    stack: 'React · Node.js · PostgreSQL · LLM',
+    num: '01',
+    title: 'TECH CARVAAN',
+    year: '2026',
+    role: 'Full Stack Developer',
+    stack: 'Laravel · React · SQL · REST APIs',
     description:
-      'Autonomous infrastructure platform. Engineered the core agent orchestration ' +
-      'pipeline, distributed task scheduling, and real-time monitoring systems from ground zero.',
-    outcome: 'Processing 10K+ autonomous tasks daily with 99.7% uptime.',
-    status: 'ACTIVE',
+      'Built and deployed the official platform for a college technical festival. Developed authentication workflows, backend APIs, database-driven features, and responsive user interfaces while managing the complete deployment lifecycle.',
+    outcome:
+      'Handled 5,000+ requests within the first 10 days of launch.',
+    link: 'https://techcarvaan.in',
   },
+
   {
-    num: '02', title: 'SENTINEL', year: '2025', role: 'Backend Engineer',
-    stack: 'Python · FastAPI · Redis · Docker · K8s',
+    num: '02',
+    title: 'AURA',
+    year: '2025',
+    role: 'AI Builder',
+    stack: 'Python · IBM Watsonx · Multi-Agent Systems',
     description:
-      'Real-time threat detection and system monitoring platform. Architected the ' +
-      'event-driven pipeline for zero-latency anomaly detection across distributed infrastructure.',
-    outcome: 'Reduced incident response time from 4 minutes to 12 seconds.',
-    status: 'DEPLOYED',
+      'Designed and developed a multi-agent AI framework focused on mental health support. Built specialized agents, orchestration workflows, contextual reasoning pipelines, and conversational experiences for personalized assistance.',
+    outcome:
+      'Ranked Top 3 at IBM SkillsBuild Pitch Night.',
   },
+
   {
-    num: '03', title: 'MINDSYNC', year: '2025', role: 'AI Developer',
-    stack: 'LangChain · OpenAI · Pinecone · React',
+    num: '03',
+    title: 'AUTONOMOUS DOCUMENT AGENT',
+    year: '2026',
+    role: 'AI Builder',
+    stack: 'FastAPI · LangGraph · ChromaDB · RAG',
     description:
-      'Enterprise knowledge automation framework. Built the RAG pipeline with multi-tool ' +
-      'agent capabilities, enabling autonomous document analysis and intelligent workflow execution.',
-    outcome: 'Automated 68% of manual knowledge retrieval processes.',
-    status: 'DEPLOYED',
+      'Developed an autonomous document intelligence system capable of ingesting, indexing, retrieving, and reasoning over unstructured documents using Retrieval-Augmented Generation and agent-driven workflows.',
+    outcome:
+      'Achieved 83–88% retrieval and verification accuracy.',
+    link: 'https://github.com/VedantMeshram07/autonomous-doccument-agent',
   },
+
   {
-    num: '04', title: 'SPECTRA', year: '2024', role: 'Full Stack Developer',
-    stack: 'Next.js · TypeScript · Prisma · AWS',
+    num: '04',
+    title: 'SENTIMENT ANALYZER',
+    year: '2025',
+    role: 'ML Developer',
+    stack: 'Python · Scikit-learn · NLTK · Pandas',
     description:
-      'Data visualisation and analytics platform for complex system monitoring. Designed ' +
-      'the real-time streaming dashboard with architectural precision and editorial clarity.',
-    outcome: 'Unified 12 disparate data sources into one analytical surface.',
-    status: 'SHIPPED',
+      'Built and deployed a machine learning application for large-scale product review classification. Designed preprocessing pipelines, feature engineering workflows, model training, and evaluation systems.',
+    outcome:
+      'Achieved 87% classification accuracy.',
+    link: 'https://sentiment-analyzer-7plh.onrender.com/',
   },
 ];
-
 /* ══════════════════════════════════════════════════════════════════════
    WHY ScrollTrigger pin, NOT position:sticky
    ──────────────────────────────────────────────────────────────────────
@@ -451,15 +464,13 @@ export default function Quests() {
                     <h2 style={{
                       fontFamily:    'var(--font-sans)',
                       fontSize:      'clamp(1.9rem, 4vw, 4.5rem)',
-                      lineHeight:    '0.86',
+                      lineHeight:    '0.95',
                       fontWeight:    900,
                       textTransform: 'uppercase',
-                      letterSpacing: '-0.03em',
+                      letterSpacing: '0.01em',
                       color:         OBSID,
                       margin:        0,
-                      display:       'flex',
-                      alignItems:    'baseline',
-                      gap:           '0.04em',
+                      wordBreak:     'break-word',
                       userSelect:    'none',
                       flexShrink:    0,
                     }}>
@@ -470,7 +481,7 @@ export default function Quests() {
                         fontWeight:    400,
                         color:         `${OBSID}50`,
                         marginRight:   '1.5rem',
-                        alignSelf:     'center',
+                        verticalAlign: 'middle',
                       }}>{project.num}</span>
 
                       {project.title}
@@ -481,20 +492,44 @@ export default function Quests() {
                         style={{
                           color:           BLUE,
                           fontSize:        '0.82em',
-                          fontFamily:      '"Georgia", "Times New Roman", serif',
+                          fontFamily:      '"Georgia", serif',
                           fontWeight:      400,
                           display:         'inline-block',
                           transformOrigin: 'center bottom',
                           willChange:      'transform',
+                          marginLeft:      '0.04em',
                         }}
                       >.</span>
                     </h2>
 
-                    {/* Metadata */}
-                    <div style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', flexShrink: 0 }}>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.28em', textTransform: 'uppercase', color: ORANGE,         userSelect: 'none' }}>{project.year}</span>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.22em', textTransform: 'uppercase', color: `${OBSID}55`, userSelect: 'none' }}>{project.role}</span>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.2em',  textTransform: 'uppercase', color: BLUE,           userSelect: 'none', opacity: 0.85 }}>{project.status}</span>
+                    {/* Metadata right side */}
+                    <div style={{
+                      display:    'flex',
+                      gap:        '1.1rem',
+                      alignItems: 'center',
+                      flexShrink: 0,
+                    }}>
+                      <span style={{
+                        fontFamily:    'var(--font-sans)',
+                        fontSize:      '11px',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                        color:         ORANGE,
+                        userSelect:    'none',
+                      }}>{project.year}</span>
+                      <span style={{
+                        fontFamily:    'var(--font-sans)',
+                        fontSize:      '11px',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color:         `${OBSID}65`,
+                        userSelect:    'none',
+                      }}>{project.role}</span>
+                      {project.link && (
+                        <a href={project.link} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', cursor: 'pointer', zIndex: 10 }} onClick={e => e.stopPropagation()} data-cursor="hover">
+                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: CEMENT, background: BLUE, padding: '4px 10px', borderRadius: '100px', userSelect: 'none' }}>VIEW ↗</span>
+                        </a>
+                      )}
                     </div>
                   </div>
 

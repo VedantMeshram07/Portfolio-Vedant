@@ -17,54 +17,68 @@ const CEMENT = '#D4D3D0';
 const ORANGE = '#FF4D00';
 
 /* ─── copy ───────────────────────────────────────────────────────────────── */
-const TAGLINE_LINES = ['FULL STACK', 'AI & BACKEND', 'ENGINEER'];
+const TAGLINE_LINES = ['THIS STARTED', 'AS A', 'QUESTION'];
 
 const LORE_TIMELINE = [
-  { year: '2026',      role: 'Architect',    detail: 'Founding Engineer',      stack: 'Distributed Systems'  },
-  { year: '2025–2026', role: 'AI Developer', detail: 'Autonomous Agents',      stack: 'LLM · RAG · Tool-Use' },
-  { year: 'Present',   role: 'Co-Convenor',  detail: 'IEEEXtreme Programming', stack: 'Leadership'           },
+  {
+    year: 'Present',
+    role: 'AI Builder',
+    detail: 'Building AI Systems for Real-World Problems',
+    stack: 'LLMs · RAG · Agents'
+  },
+  {
+    year: '2025–2026',
+    role: 'AI Developer',
+    detail: 'AI Club, GCOE Jalgaon',
+    stack: 'Automation · NLP · Research'
+  },
+  {
+    year: '2025–2026',
+    role: 'Technical Council',
+    detail: 'Driving Technical Communities & Events',
+    stack: 'Leadership · Collaboration'
+  }
 ];
 
 const PRINCIPLES = [
-  { word: 'AUTONOMY',  sub: 'SELF-DIRECTED SYSTEMS' },
-  { word: 'RIGOR',     sub: 'ENGINEERED PRECISION'  },
-  { word: 'RESTRAINT', sub: 'ABSOLUTE MINIMALISM'   },
+  { word: 'CURIOSITY',  sub: 'ENDLESS EXPLORATION' },
+  { word: 'CRAFT',     sub: 'CREATIVE BUILDING'  },
+  { word: 'EXECUTION', sub: 'RELENTLESS PURSUIT'   },
 ];
 
 const MANIFESTO_TEXT =
-  'I build systems that go beyond simple interfaces and create meaningful impact through ' +
-  'automation, intelligence, and scalability. My focus is on transforming ideas into working ' +
-  'products rather than limiting myself to theoretical concepts. I engineer spaces where complex ' +
-  'logic meets absolute minimalism.';
+  'Curiosity has always been the starting point for everything I build. ' +
+  'I enjoy exploring complex systems, understanding their inner workings, and pushing them beyond their intended limits. ' +
+  'From AI agents and autonomous workflows to production applications, I turn exploration into execution. ' +
+  'What you see here is the result of that process—projects, experiments, and systems brought into the real world.';
 
 const PROJECTS = [
   {
-    num: '01', title: 'AURA', year: '2026', role: 'Founding Engineer',
-    stack: 'React · Node.js · PostgreSQL · LLM',
-    description: 'Autonomous infrastructure platform. Engineered the core agent orchestration pipeline, distributed task scheduling, and real-time monitoring systems from ground zero.',
-    outcome: 'Processing 10K+ autonomous tasks daily with 99.7% uptime.',
-    status: 'ACTIVE',
+    num: '01', title: 'TECH CARVAAN', year: '2026', role: 'Full Stack Developer',
+    stack: 'Laravel · React · SQL · REST APIs',
+    description: 'Built and deployed the official platform for a college technical festival. Developed authentication workflows, backend APIs, database-driven features, and responsive user interfaces while managing the complete deployment lifecycle.',
+    outcome: 'Handled 5,000+ requests within the first 10 days of launch.',
+    link: 'https://techcarvaan.in',
   },
   {
-    num: '02', title: 'SENTINEL', year: '2025', role: 'Backend Engineer',
-    stack: 'Python · FastAPI · Redis · Docker · K8s',
-    description: 'Real-time threat detection and system monitoring platform. Architected the event-driven pipeline for zero-latency anomaly detection across distributed infrastructure.',
-    outcome: 'Reduced incident response time from 4 minutes to 12 seconds.',
-    status: 'DEPLOYED',
+    num: '02', title: 'AURA', year: '2025', role: 'AI Builder',
+    stack: 'Python · IBM Watsonx · Multi-Agent Systems',
+    description: 'Designed and developed a multi-agent AI framework focused on mental health support. Built specialized agents, orchestration workflows, contextual reasoning pipelines, and conversational experiences for personalized assistance.',
+    outcome: 'Ranked Top 3 at IBM SkillsBuild Pitch Night.',
   },
   {
-    num: '03', title: 'MINDSYNC', year: '2025', role: 'AI Developer',
-    stack: 'LangChain · OpenAI · Pinecone · React',
-    description: 'Enterprise knowledge automation framework. Built the RAG pipeline with multi-tool agent capabilities, enabling autonomous document analysis and intelligent workflow execution.',
-    outcome: 'Automated 68% of manual knowledge retrieval processes.',
-    status: 'DEPLOYED',
+    num: '03', title: 'AUTONOMOUS DOCUMENT AGENT', year: '2026', role: 'AI Builder',
+    stack: 'FastAPI · LangGraph · ChromaDB · RAG',
+    description: 'Developed an autonomous document intelligence system capable of ingesting, indexing, retrieving, and reasoning over unstructured documents using Retrieval-Augmented Generation and agent-driven workflows.',
+    outcome: 'Achieved 83–88% retrieval and verification accuracy.',
+    link: 'https://github.com/VedantMeshram07/autonomous-doccument-agent',
   },
   {
-    num: '04', title: 'SPECTRA', year: '2024', role: 'Full Stack Developer',
-    stack: 'Next.js · TypeScript · Prisma · AWS',
-    description: 'Data visualisation and analytics platform for complex system monitoring. Designed the real-time streaming dashboard with architectural precision and editorial clarity.',
-    outcome: 'Unified 12 disparate data sources into one analytical surface.',
-    status: 'SHIPPED',
+    num: '04', title: 'SENTIMENT ANALYZER', year: '2025', role: 'ML Developer',
+    stack: 'Python · Scikit-learn · NLTK · Pandas',
+    description: 'Built and deployed a machine learning application for large-scale product review classification. Designed preprocessing pipelines, feature engineering workflows, model training, and evaluation systems.',
+    outcome: 'Achieved 87% classification accuracy.',
+    link: 'https://sentiment-analyzer-7plh.onrender.com/',
   },
 ];
 
@@ -677,8 +691,8 @@ export default function SiteCanvas() {
             {/* Hero content */}
             <div ref={heroContentRef} className="absolute inset-0 flex flex-col px-10 md:px-14 py-8">
               <header className="flex justify-between items-start font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 shrink-0">
-                <span data-cursor="name">Vedant Meshram</span>
-                <span data-cursor="hover" className="cursor-none">Get in touch ↗</span>
+                <span data-cursor="name" className='text-base'>Vedant Meshram</span>
+                <span data-cursor="hover" className="cursor-none text-base">Get in touch ↗</span>
               </header>
               <div className="flex-1 flex flex-col items-start justify-end font-sans-brutal uppercase tracking-tighter leading-[0.97] text-[clamp(2.8rem,8vw,8.5rem)] pb-3 text-[#0A0A0A]">
                 {TAGLINE_LINES.map((line, i) => (
@@ -855,7 +869,6 @@ export default function SiteCanvas() {
                   <div key={project.num}
                     onMouseEnter={() => setActiveIndex(i)}
                     onClick={() => {
-                      /* Touch-friendly: first tap highlights, second tap opens dossier */
                       if (activeIndex === i) {
                         openDossier(i);
                       } else {
@@ -870,28 +883,29 @@ export default function SiteCanvas() {
                       opacity: isActive ? 1 : 0.22, transition: 'opacity 0.4s ease',
                     }}
                   >
-                    {/* Orange accent */}
                     <div style={{ position: 'absolute', left: 0, top: '20%', bottom: '20%', width: '3px', background: ORANGE, opacity: isActive ? 1 : 0, transition: 'opacity 0.4s ease' }} />
 
-                    {/* Title + meta */}
                     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
-                      <h2 className="quests-proj-title" style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(2.1rem, 4.4vw, 5rem)', lineHeight: '0.92', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.01em', color: OBSID, margin: 0, display: 'flex', alignItems: 'baseline', gap: '0.04em', userSelect: 'none', flexShrink: 0 }}>
-                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', fontWeight: 400, color: `${OBSID}50`, marginRight: '1.5rem', alignSelf: 'center' }}>{project.num}</span>
+                      <h2 className="quests-proj-title" style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(1.9rem, 4vw, 4.5rem)', lineHeight: '0.95', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.01em', color: OBSID, margin: 0, wordBreak: 'break-word', userSelect: 'none', flexShrink: 0 }}>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', fontWeight: 400, color: `${OBSID}50`, marginRight: '1.5rem', verticalAlign: 'middle' }}>{project.num}</span>
                         {project.title}
                         <span ref={el => { periodRefs.current[i] = el; }} aria-hidden="true"
-                          style={{ color: BLUE, fontSize: '0.82em', fontFamily: '"Georgia", serif', fontWeight: 400, display: 'inline-block', transformOrigin: 'center bottom', willChange: 'transform' }}>.</span>
+                          style={{ color: BLUE, fontSize: '0.82em', fontFamily: '"Georgia", serif', fontWeight: 400, display: 'inline-block', transformOrigin: 'center bottom', willChange: 'transform', marginLeft: '0.04em' }}>.</span>
                       </h2>
                       <div className="quests-proj-meta" style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', flexShrink: 0 }}>
-                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.28em', textTransform: 'uppercase', color: ORANGE,         userSelect: 'none' }}>{project.year}</span>
-                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.22em', textTransform: 'uppercase', color: `${OBSID}55`, userSelect: 'none' }}>{project.role}</span>
-                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.2em',  textTransform: 'uppercase', color: BLUE,           userSelect: 'none', opacity: 0.85 }}>{project.status}</span>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', letterSpacing: '0.2em', textTransform: 'uppercase', color: ORANGE,         userSelect: 'none' }}>{project.year}</span>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: `${OBSID}65`, userSelect: 'none' }}>{project.role}</span>
+                        {project.link && (
+                          <a href={project.link} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', cursor: 'pointer', zIndex: 10 }} onClick={e => e.stopPropagation()} data-cursor="hover">
+                            <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: CEMENT, background: BLUE, padding: '4px 10px', borderRadius: '100px', userSelect: 'none' }}>VIEW ↗</span>
+                          </a>
+                        )}
                       </div>
                     </div>
 
-                    {/* Stack (fixed height, no layout shift) */}
-                    <div style={{ marginTop: '0.45rem', height: '14px', overflow: 'hidden', display: 'flex', alignItems: 'center', opacity: isActive ? 0.55 : 0, transition: 'opacity 0.4s ease' }}>
+                    <div style={{ marginTop: '0.65rem', height: '16px', overflow: 'hidden', display: 'flex', alignItems: 'center', opacity: isActive ? 0.55 : 0, transition: 'opacity 0.4s ease' }}>
                       {project.stack.split(' · ').map((s, j, arr) => (
-                        <span key={j} style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: `${OBSID}90` }}>
+                        <span key={j} style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase', color: `${OBSID}90` }}>
                           {s}{j < arr.length - 1 && <span style={{ color: BLUE, margin: '0 0.4em', opacity: 0.6 }}>·</span>}
                         </span>
                       ))}
@@ -908,7 +922,6 @@ export default function SiteCanvas() {
           columnsRef={ptColumnsRef}
         />
 
-        {/* Powers interactive overlay */}
         <Powers
           overlayRef={powersOverlayRef}
           dividersRef={powersDividersRef}
@@ -919,11 +932,6 @@ export default function SiteCanvas() {
           headersRef={powersHeadersRef}
         />
 
-        {/* ══════════════════════════════════════════════════════════════
-            ACT V — ARTIFACTS
-            Full cement canvas. Editorial verification records.
-            Quiet restraint after the fractured Powers matrix.
-            ═════════════════════════════════════════════════════════════ */}
         <Artifacts
           overlayRef={artifactsOverlayRef}
           headerRef={artifactsHeaderRef}
@@ -994,22 +1002,29 @@ function DossierOverlay({ project, originX, originY, onClose }) {
           <button onClick={handleClose} data-cursor="hover" style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.35em', textTransform: 'uppercase', color: BLUE, background: 'none', border: 'none', cursor: 'none', padding: 0 }}>← CLOSE</button>
         </div>
 
-        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(3.8rem, 12vw, 12rem)', lineHeight: '0.82', textTransform: 'uppercase', letterSpacing: '-0.03em', fontWeight: 900, color: CEMENT, margin: '0 0 2.5vh', display: 'flex', alignItems: 'baseline', gap: '0.03em', userSelect: 'none', flexShrink: 0 }}>
-          {project.title}<span style={{ color: BLUE, fontSize: '0.82em', fontFamily: '"Georgia", serif', fontWeight: 400 }}>.</span>
+        <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(3.5rem, 9.5vw, 9.5rem)', lineHeight: '0.95', textTransform: 'uppercase', letterSpacing: '-0.03em', fontWeight: 900, color: CEMENT, margin: '0 0 2.5vh', wordBreak: 'break-word', userSelect: 'none', flexShrink: 0 }}>
+          {project.title}<span style={{ color: BLUE, fontSize: '0.82em', fontFamily: '"Georgia", serif', fontWeight: 400, marginLeft: '0.03em' }}>.</span>
         </h2>
 
         <div style={{ height: '1px', background: `${CEMENT}20`, marginBottom: '2.5vh', flexShrink: 0 }} />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'auto auto 1fr', gap: '0 4vw', marginBottom: '2.5vh', flexShrink: 0, rowGap: '1.5vh' }}>
-          {[['ROLE', project.role, false], ['YEAR', project.year, true]].map(([label, val, hasStatus]) => (
-            <div key={label}>
-              <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: `${CEMENT}50`, display: 'block', marginBottom: '0.4rem', userSelect: 'none' }}>{label}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span style={{ fontFamily: 'var(--font-sans)', fontSize: '16px', color: `${CEMENT}DD` }}>{val}</span>
-                {hasStatus && <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: BLUE }}>{project.status}</span>}
+          {[['ROLE', project.role, false], ['YEAR', project.year, true]].map(([label, val, hasStatus]) => {
+            const isLink = hasStatus;
+            return (
+              <div key={label}>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: `${CEMENT}50`, display: 'block', marginBottom: '0.4rem', userSelect: 'none' }}>{isLink ? 'Link' : label}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: '16px', color: `${CEMENT}DD` }}>{isLink ? (project.link ? 'View Project' : 'Private') : val}</span>
+                  {isLink && project.link && (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={e => e.stopPropagation()}>
+                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: BLUE }}>OPEN ↗</span>
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           <div>
             <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', color: `${CEMENT}50`, display: 'block', marginBottom: '0.4rem', userSelect: 'none' }}>STACK</span>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>

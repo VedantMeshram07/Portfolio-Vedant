@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
 const PARAGRAPH =
-  'Turning late-night logic into autonomous systems. I build intelligent infrastructure that goes beyond the interface.'
+  'A walkthrough of systems, experiments, and ideas that made it out of my head and into the real world.'
 
 // Pool used by the char-flicker. Deliberately not alphabet-only — includes
 // symbols so a flicker reads as "system noise", not "typo".

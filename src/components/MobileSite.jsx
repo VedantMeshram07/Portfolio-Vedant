@@ -31,35 +31,34 @@ const MANIFESTO_TEXT =
 
 const PROJECTS = [
   {
-    num: '01', title: 'AURA', year: '2026', role: 'Founding Engineer',
-    stack: 'React · Node.js · PostgreSQL · LLM',
-    description: 'Autonomous infrastructure platform. Engineered the core agent orchestration pipeline, distributed task scheduling, and real-time monitoring systems from ground zero.',
-    outcome: 'Processing 10K+ autonomous tasks daily with 99.7% uptime.',
-    status: 'ACTIVE',
+    num: '01', title: 'TECH CARVAAN', year: '2026', role: 'Full Stack Developer',
+    stack: 'Laravel · React · SQL · REST APIs',
+    description: 'Built and deployed the official platform for a college technical festival. Developed authentication workflows, backend APIs, database-driven features, and responsive user interfaces while managing the complete deployment lifecycle.',
+    outcome: 'Handled 5,000+ requests within the first 10 days of launch.',
+    link: 'https://techcarvaan.in',
     accent: BLUE,
   },
   {
-    num: '02', title: 'SENTINEL', year: '2025', role: 'Backend Engineer',
-    stack: 'Python · FastAPI · Redis · Docker · K8s',
-    description: 'Real-time threat detection and system monitoring platform. Architected the event-driven pipeline for zero-latency anomaly detection across distributed infrastructure.',
-    outcome: 'Reduced incident response time from 4 minutes to 12 seconds.',
-    status: 'DEPLOYED',
+    num: '02', title: 'AURA', year: '2025', role: 'AI Builder',
+    stack: 'Python · IBM Watsonx · Multi-Agent Systems',
+    description: 'Designed and developed a multi-agent AI framework focused on mental health support. Built specialized agents, orchestration workflows, contextual reasoning pipelines, and conversational experiences for personalized assistance.',
+    outcome: 'Ranked Top 3 at IBM SkillsBuild Pitch Night.',
     accent: ORANGE,
   },
   {
-    num: '03', title: 'MINDSYNC', year: '2025', role: 'AI Developer',
-    stack: 'LangChain · OpenAI · Pinecone · React',
-    description: 'Enterprise knowledge automation framework. Built the RAG pipeline with multi-tool agent capabilities, enabling autonomous document analysis and intelligent workflow execution.',
-    outcome: 'Automated 68% of manual knowledge retrieval processes.',
-    status: 'DEPLOYED',
+    num: '03', title: 'AUTONOMOUS DOCUMENT AGENT', year: '2026', role: 'AI Builder',
+    stack: 'FastAPI · LangGraph · ChromaDB · RAG',
+    description: 'Developed an autonomous document intelligence system capable of ingesting, indexing, retrieving, and reasoning over unstructured documents using Retrieval-Augmented Generation and agent-driven workflows.',
+    outcome: 'Achieved 83–88% retrieval and verification accuracy.',
+    link: 'https://github.com/VedantMeshram07/autonomous-doccument-agent',
     accent: GREEN,
   },
   {
-    num: '04', title: 'SPECTRA', year: '2024', role: 'Full Stack Developer',
-    stack: 'Next.js · TypeScript · Prisma · AWS',
-    description: 'Data visualisation and analytics platform for complex system monitoring. Designed the real-time streaming dashboard with architectural precision and editorial clarity.',
-    outcome: 'Unified 12 disparate data sources into one analytical surface.',
-    status: 'SHIPPED',
+    num: '04', title: 'SENTIMENT ANALYZER', year: '2025', role: 'ML Developer',
+    stack: 'Python · Scikit-learn · NLTK · Pandas',
+    description: 'Built and deployed a machine learning application for large-scale product review classification. Designed preprocessing pipelines, feature engineering workflows, model training, and evaluation systems.',
+    outcome: 'Achieved 87% classification accuracy.',
+    link: 'https://sentiment-analyzer-7plh.onrender.com/',
     accent: PURPLE,
   },
 ];
@@ -394,10 +393,19 @@ export default function MobileSite() {
                       flexShrink:    0,
                     }}>+</span>
                   </div>
-                  <div style={{ display: 'flex', gap: '12px', marginTop: '6px', flexWrap: 'wrap' }}>
-                    <span style={{ ...label, color: ORANGE, fontSize: '8px' }}>{p.year}</span>
-                    <span style={{ ...label, color: `${OBSID}45`, fontSize: '8px' }}>{p.role}</span>
-                    <span style={{ ...label, color: BLUE, fontSize: '8px', opacity: 0.9 }}>{p.status}</span>
+                  {/* Metadata (Year + Role + Link) */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', marginTop: '12px' }}>
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: ORANGE }}>{p.year}</span>
+                    <span style={{ width: '3px', height: '3px', background: `${OBSID}30`, borderRadius: '50%' }} />
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: `${OBSID}60` }}>{p.role}</span>
+                    {p.link && (
+                      <>
+                        <span style={{ width: '3px', height: '3px', background: `${OBSID}30`, borderRadius: '50%' }} />
+                        <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: CEMENT, background: BLUE, padding: '3px 8px', borderRadius: '100px' }}>VIEW ↗</span>
+                        </a>
+                      </>
+                    )}
                   </div>
                 </div>
               </button>
@@ -438,7 +446,7 @@ export default function MobileSite() {
                       margin:       0,
                       lineHeight:   1.5,
                     }}>
-                      {p.outcome}
+                      {project.outcome}
                     </p>
                   </div>
                 </div>

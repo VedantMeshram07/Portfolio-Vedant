@@ -9,10 +9,26 @@ const CEMENT = '#D4D3D0';
 const BLUE   = '#3B82F6';
 
 const CONTACT_LINKS = [
-  { label: 'Email',    value: 'vedant.meshram@example.com', href: 'mailto:vedant.meshram@example.com' },
-  { label: 'GitHub',   value: 'github.com/vedantmeshram',   href: 'https://github.com/vedantmeshram' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/vedantmeshram', href: 'https://linkedin.com/in/vedantmeshram' },
-  { label: 'Resume',   value: 'Download PDF',               href: '/resume.pdf' },
+  {
+    label: 'Email',
+    value: 'meshramvedant7@gmail.com',
+    href: 'mailto:meshramvedant7@gmail.com'
+  },
+  {
+    label: 'GitHub',
+    value: 'github.com/VedantMeshram07',
+    href: 'https://github.com/VedantMeshram07'
+  },
+  {
+    label: 'LinkedIn',
+    value: 'linkedin.com/in/vedant-meshram-aa6a34304',
+    href: 'https://www.linkedin.com/in/vedant-meshram-aa6a34304/'
+  },
+  {
+    label: 'Resume',
+    value: 'Download Resume',
+    href: '/resume.pdf'
+  },
 ];
 
 const AVAILABILITY = [
@@ -315,8 +331,8 @@ export default function TerminalSection() {
           textTransform:  'uppercase',
           color:          `${OBSID}80`,
         }}>
-          <span>Crafting elegant systems &amp; bold digital experiences.</span>
-          <span>© {new Date().getFullYear()} Vedant</span>
+          <span className='text-xs'>Crafting elegant systems &amp; bold digital experiences.</span>
+          <span className='text-xs'>© {new Date().getFullYear()} Vedant</span>
         </div>
       </div>
 
