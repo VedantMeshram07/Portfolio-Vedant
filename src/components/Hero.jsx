@@ -66,7 +66,15 @@ const Hero = () => {
         {/* Top corner labels */}
         <header className="flex justify-between items-start font-sans-brutal text-[10px] md:text-xs tracking-[0.3em] uppercase font-medium">
           <span ref={topLeftRef}>Vedant Meshram</span>
-          <span ref={topRightRef} data-cursor="hover">Get in touch ↗</span>
+          <a
+            ref={topRightRef}
+            href="/Vedant_Meshram_Resume.pdf"
+            download
+            data-cursor="hover"
+            className="text-[inherit] no-underline"
+          >
+            Download Resume ↗
+          </a>
         </header>
 
         {/* Identity block — Anton 3-line, medium weight. The main

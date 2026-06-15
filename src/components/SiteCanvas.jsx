@@ -296,7 +296,7 @@ export default function SiteCanvas() {
       tl.to(loreItems, { x: 0, y: 0, scale: 1, autoAlpha: 1, ease: 'power4.out', duration: 0.20, stagger: 0.07 }, 0.72);
 
       /* ── 7. WORD SCRUB  (0.80 → 1.00) ───────────────────────────── */
-      tl.to(words, { color: OBSID, ease: 'none', duration: 0.20, stagger: { each: 0.008, from: 'start' } }, 0.80);
+      tl.to(words, { color: OBSID, ease: 'none', duration: 0.02, stagger: { amount: 0.18, from: 'start' } }, 0.80);
 
       /* ── 8. LORE HOLD   (1.00 → 1.133)  +120vh ─────────────────── */
       tl.to({}, { duration: 0.133 });
@@ -710,9 +710,9 @@ export default function SiteCanvas() {
               <div className="mt-4 h-px bg-[#0A0A0A]/20 shrink-0" />
               <div className="flex-1 flex flex-col pt-10">
                 <div ref={statementRef} className="font-sans-brutal uppercase tracking-tighter leading-[0.92] text-[clamp(2.4rem,5.5vw,6.2rem)] text-[#0A0A0A] shrink-0" data-cursor="hover">
-                  <div>I BUILD</div>
-                  <div>SYSTEMS</div>
-                  <div>THAT GO BEYOND.</div>
+                  <div>BASICALLY,</div>
+                  <div>I MAKE</div>
+                  <div>COOL PROJECTS.</div>
                 </div>
                 <div className="flex-1 min-h-[3vh]" />
                 <div className="grid manifesto-body-grid shrink-0" style={{ gridTemplateColumns: '5fr 8fr', gap: '0 2.5vw' }}>

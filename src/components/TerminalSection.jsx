@@ -27,7 +27,8 @@ const CONTACT_LINKS = [
   {
     label: 'Resume',
     value: 'Download Resume',
-    href: '/resume.pdf'
+    href: '/Vedant_Meshram_Resume.pdf',
+    download: true
   },
 ];
 
@@ -265,12 +266,13 @@ export default function TerminalSection() {
           {/* Right Column: Links */}
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {CONTACT_LINKS.map((link) => (
-              <a 
+              <a
                 key={link.label}
                 href={link.href}
                 className="contact-link-awwwards"
                 target={link.href.startsWith('http') ? '_blank' : undefined}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                download={link.download || undefined}
                 data-cursor="hover"
               >
                 <span>{link.label}</span>

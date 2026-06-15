@@ -74,7 +74,7 @@ const CONTACT_LINKS = [
   { label: 'Email',    value: 'vedant.meshram@example.com',    href: 'mailto:vedant.meshram@example.com' },
   { label: 'GitHub',   value: 'github.com/vedantmeshram',      href: 'https://github.com/vedantmeshram' },
   { label: 'LinkedIn', value: 'linkedin.com/in/vedantmeshram', href: 'https://linkedin.com/in/vedantmeshram' },
-  { label: 'Resume',   value: 'Download PDF',                  href: '/resume.pdf' },
+  { label: 'Resume',   value: 'Download PDF',                  href: '/Vedant_Meshram_Resume.pdf', download: true },
 ];
 
 /* ─── shared style primitives ───────────────────────────────── */
