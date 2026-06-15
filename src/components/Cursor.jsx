@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 
-const CURSOR_BLUE         = '#3b82f6'   // var(--color-electric-blue) — default on cement backgrounds
-const CURSOR_ORANGE       = '#FF6A00'   // default on obsidian backgrounds
+const CURSOR_BLUE         = '#3b82f6'   // var(--color-electric-blue)
 const CURSOR_VIVID_ORANGE = '#FF7A2B'   // used during difference blend hover
 
 /**
@@ -92,10 +91,9 @@ const Cursor = ({ active = false }) => {
       if (stateRef.current === 'default') return
       stateRef.current = 'default'
       dot.style.mixBlendMode = ''
-      const lum = getLuminance(getEffectiveBg(target || document.body))
       gsap.to(dot, {
         scale: 1,
-        backgroundColor: lum > 128 ? CURSOR_BLUE : CURSOR_ORANGE,
+        backgroundColor: CURSOR_BLUE,
         duration: 0.32, ease: 'power2.out',
       })
     }
@@ -135,10 +133,7 @@ const Cursor = ({ active = false }) => {
       } else {
         // Update default colour as cursor moves between backgrounds
         if (stateRef.current === 'default') {
-          const lum = getLuminance(getEffectiveBg(t))
-          const col = lum > 128 ? CURSOR_BLUE : CURSOR_ORANGE
-          // Only tween if colour needs to change (avoids thrashing)
-          gsap.to(dot, { backgroundColor: col, duration: 0.28, ease: 'power2.inOut' })
+          gsap.to(dot, { backgroundColor: CURSOR_BLUE, duration: 0.28, ease: 'power2.inOut' })
         } else {
           setDefault(t)
         }
