@@ -12,7 +12,7 @@ const CONTACT_LINKS = [
   {
     label: 'Email',
     value: 'meshramvedant7@gmail.com',
-    href: 'mailto:meshramvedant7@gmail.com'
+    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=meshramvedant7@gmail.com'
   },
   {
     label: 'GitHub',
@@ -270,8 +270,8 @@ export default function TerminalSection() {
                 key={link.label}
                 href={link.href}
                 className="contact-link-awwwards"
-                target={link.href.startsWith('http') ? '_blank' : undefined}
-                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                target={(link.href.startsWith('http') || link.href.includes('mail.google.com')) ? '_blank' : undefined}
+                rel={(link.href.startsWith('http') || link.href.includes('mail.google.com')) ? 'noopener noreferrer' : undefined}
                 download={link.download || undefined}
                 data-cursor="hover"
               >

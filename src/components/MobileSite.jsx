@@ -9,7 +9,7 @@ const GREEN  = '#10B981';
 const PURPLE = '#8B5CF6';
 
 /* ─── copy (identical to desktop) ───────────────────────────── */
-const TAGLINE_LINES = ['FULL STACK', 'AI & BACKEND', 'ENGINEER'];
+const TAGLINE_LINES = ['YOUR FRIENDLY', 'NEIGHBOURHOOD', 'AI DEVELOPER'];
 
 const LORE_TIMELINE = [
   { year: '2026',      role: 'Architect',    detail: 'Founding Engineer',      stack: 'Distributed Systems'  },
@@ -159,7 +159,9 @@ export default function MobileSite() {
         }}>
           <span style={{ ...label, color: `${CEMENT}55`, fontSize: '9px' }}>Vedant Meshram</span>
           <a
-            href="mailto:vedant.meshram@example.com"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=meshramvedant7@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{ ...label, color: `${CEMENT}55`, fontSize: '9px', textDecoration: 'none' }}
           >
             Get in touch ↗

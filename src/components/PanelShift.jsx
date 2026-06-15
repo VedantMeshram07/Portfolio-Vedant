@@ -357,7 +357,7 @@ const PanelShift = () => {
             <header className="flex justify-between items-start font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 shrink-0">
               {/* data-cursor="name" suspends the blend effect on the nameplate */}
               <span data-cursor="name">Vedant Meshram</span>
-              <span data-cursor="hover" className="cursor-none">Get in touch ↗</span>
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=meshramvedant7@gmail.com" target="_blank" rel="noopener noreferrer" data-cursor="hover" className="cursor-none" style={{ textDecoration: 'none', color: 'inherit' }}>Get in touch ↗</a>
             </header>
 
             {/* Massive taglines — bottom-anchored exactly like the hero spec */}

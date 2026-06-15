@@ -17,7 +17,7 @@ const CEMENT = '#D4D3D0';
 const ORANGE = '#FF4D00';
 
 /* ─── copy ───────────────────────────────────────────────────────────────── */
-const TAGLINE_LINES = ['THIS STARTED', 'AS A', 'QUESTION'];
+const TAGLINE_LINES = ['YOUR FRIENDLY', 'NEIGHBOURHOOD', 'AI DEVELOPER'];
 
 const LORE_TIMELINE = [
   {
@@ -692,7 +692,7 @@ export default function SiteCanvas() {
             <div ref={heroContentRef} className="absolute inset-0 flex flex-col px-10 md:px-14 py-8">
               <header className="flex justify-between items-start font-sans-brutal text-[9px] tracking-[0.35em] uppercase text-[#0A0A0A]/60 shrink-0">
                 <span data-cursor="name" className='text-base'>Vedant Meshram</span>
-                <span data-cursor="hover" className="cursor-none text-base">Get in touch ↗</span>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=meshramvedant7@gmail.com" target="_blank" rel="noopener noreferrer" data-cursor="hover" className="cursor-none text-base" style={{ textDecoration: 'none', color: 'inherit' }}>Get in touch ↗</a>
               </header>
               <div className="flex-1 flex flex-col items-start justify-end font-sans-brutal uppercase tracking-tighter leading-[0.97] text-[clamp(2.8rem,8vw,8.5rem)] pb-3 text-[#0A0A0A]">
                 {TAGLINE_LINES.map((line, i) => (
