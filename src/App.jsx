@@ -7,8 +7,7 @@ import Awakening from './components/Awakening.jsx';
 import Cursor from './components/Cursor.jsx';
 import SiteCanvas from './components/SiteCanvas.jsx';
 import TerminalSection from './components/TerminalSection.jsx';
-import MobileHero from './components/MobileHero.jsx';
-import MobileLore from './components/MobileLore.jsx';
+import MobileLayout from './components/MobileLayout.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,13 +70,11 @@ export default function App() {
       )}
 
       <main>
-        {isMobile && (
-          <>
-            <MobileHero />
-            <MobileLore />
-          </>
+        {isMobile ? (
+          <MobileLayout />
+        ) : (
+          <SiteCanvas />
         )}
-        <SiteCanvas isMobile={isMobile} />
         <TerminalSection />
       </main>
     </>
